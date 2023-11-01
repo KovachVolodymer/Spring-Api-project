@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface HotelsRepository extends MongoRepository<Hotels, String> {
 
-
 }
