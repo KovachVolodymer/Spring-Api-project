@@ -25,7 +25,7 @@ public class Hotels {
     private String address;
     private String starRating;
     private String description;
-    private String photo;
+    private List<String> photos;
     private String pricePerNight;
     private List<String> advantages;
 

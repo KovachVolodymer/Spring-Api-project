@@ -26,6 +26,7 @@ public class HotelsController {
         List<Hotels> hotelList = hotelsRepository.findAll();
         return ok(hotelList);
     }
+
     @GetMapping("/hotel/{id}")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> hotelById(@PathVariable int id) {
@@ -65,8 +66,8 @@ public class HotelsController {
             if (hotel.getDescription() != null) {
                 _hotel.setDescription(hotel.getDescription());
             }
-            if (hotel.getPhoto() != null) {
-                _hotel.setPhoto(hotel.getPhoto());
+            if (hotel.getPhotos() != null) {
+                _hotel.setPhotos(hotel.getPhotos());
             }
             if (hotel.getPricePerNight() != null) {
                 _hotel.setPricePerNight(hotel.getPricePerNight());
@@ -78,6 +79,17 @@ public class HotelsController {
             return ResponseEntity.ok(hotelsRepository.save(_hotel));
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/deleteHotel/{id}")
+    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<String> deleteHotel(@PathVariable int id) {
+        try {
+            hotelsRepository.deleteByHotelId(id);
+            return ResponseEntity.ok("Готель було успішно видалено.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Не вдалося знайти готель для видалення.");
         }
     }
 

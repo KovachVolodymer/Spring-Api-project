@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface HotelsRepository extends MongoRepository<Hotels, String> {
     Optional<Hotels> findByHotelId(int hotelId);
+
+    void deleteByHotelId(int id);
 }
