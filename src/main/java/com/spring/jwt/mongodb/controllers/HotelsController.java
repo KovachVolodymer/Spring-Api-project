@@ -5,6 +5,7 @@ import com.spring.jwt.mongodb.repository.HotelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class HotelsController {
     }
 
     @GetMapping("/hotel/{id}")
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> hotelById(@PathVariable int id) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
         return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
@@ -40,7 +41,7 @@ public class HotelsController {
     public ResponseEntity<Hotels> addHotel(@RequestBody Hotels hotel) {
         Optional<Hotels> existingHotel = hotelsRepository.findByHotelId(hotel.getHotelId());
         if (existingHotel.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // Можна використовувати ResponseEntity конструктор без тіла, щоб позначити конфлікт
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         } else {
             Hotels newHotel = hotelsRepository.save(hotel);
             return ResponseEntity.ok(newHotel);
@@ -85,11 +86,16 @@ public class HotelsController {
     @DeleteMapping("/deleteHotel/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteHotel(@PathVariable int id) {
-        try {
-            hotelsRepository.deleteByHotelId(id);
-            return ResponseEntity.ok("Готель було успішно видалено.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Не вдалося знайти готель для видалення.");
+        Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
+        if (hotelData.isPresent()) {
+            try {
+                hotelsRepository.deleteByHotelId(id);
+                return ResponseEntity.ok("Готель було успішно видалено.");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Помилка при видаленні готелю.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Готель з вказаним ID не знайдено.");
         }
     }
 
