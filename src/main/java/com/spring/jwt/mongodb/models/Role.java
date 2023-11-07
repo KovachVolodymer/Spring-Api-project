@@ -1,10 +1,12 @@
 package com.spring.jwt.mongodb.models;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
+@Setter
 @Document(collection = "roles")
 public class Role {
   @Id
@@ -20,11 +22,5 @@ public class Role {
     this.name = name;
   }
 
-  public void setId(String id) {
-    this.id = id;
-  }
 
-  public void setName(ERole name) {
-    this.name = name;
-  }
 }
