@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Flights;
+import com.spring.jwt.mongodb.models.Hotels;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.notFound;
+import static org.springframework.http.ResponseEntity.ok;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -113,5 +115,14 @@ public class FlightsController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Політ з вказаним ID не знайдено.");
         }
     }
+
+    @GetMapping("/favoriteFlights")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<Flights>> favoriteFlights(@RequestParam List<String> favoriteFlights) {
+        List<Flights> flightsList = flightsRepository.findAllById(favoriteFlights);
+        return ResponseEntity.ok(flightsList);
+    }
+
+
 
 }
