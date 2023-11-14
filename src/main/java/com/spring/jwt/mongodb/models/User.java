@@ -1,8 +1,6 @@
 package com.spring.jwt.mongodb.models;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -35,10 +33,10 @@ public class User {
   @Size(max = 120)
   private String password;
 
-  private List<String> favorites;
-
   @DBRef
   private Set<Role> roles = new HashSet<>();
+
+  private List<Favorites> favoritesList = new ArrayList<>();;
 
   public User() {
   }
@@ -48,5 +46,6 @@ public class User {
     this.email = email;
     this.password = password;
   }
+
 
 }
