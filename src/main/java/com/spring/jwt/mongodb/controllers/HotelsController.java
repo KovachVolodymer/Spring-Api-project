@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,16 +70,18 @@ public class HotelsController {
     @PutMapping("/updateHotel/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> updateHotel(@PathVariable int id, @RequestBody Hotels hotel) {
-        Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
-        if (hotelData.isPresent()) {
-            Hotels _hotel = hotelData.get();
 
-
-
-            return ResponseEntity.ok(hotelsRepository.save(_hotel));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Hotels> optionalHotel = hotelsRepository.findByHotelId(id);
+        optionalHotel.ifPresent(h -> {
+           Optional.ofNullable(hotel.getName()).ifPresent(h::setName);
+           Optional.ofNullable(hotel.getLocation()).ifPresent(h::setLocation);
+           Optional.ofNullable(hotel.getPrice()).ifPresent(h::setPrice);
+           Optional.ofNullable(hotel.getPhoto()).ifPresent(h::setPhoto);
+           Optional.ofNullable(hotel.getStarRating()).ifPresent(h::setStarRating);
+           Optional.ofNullable(hotel.getAdvantages()).ifPresent(h::setAdvantages);
+           hotelsRepository.save(h);
+        });
+        return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
     @DeleteMapping("/deleteHotel/{id}")

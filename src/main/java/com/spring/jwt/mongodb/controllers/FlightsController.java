@@ -70,12 +70,19 @@ public class FlightsController {
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> updateFlight(@PathVariable Integer id, @RequestBody Flights flight) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
-        if (flightData.isPresent()) {
-            Flights _flight = flightData.get();
-            return ResponseEntity.ok(flightsRepository.save(_flight));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        flightData.ifPresent(flg -> {
+            Optional.ofNullable(flight.getAirlineLogo()).ifPresent(flg::setAirlineLogo);
+            Optional.ofNullable(flight.getAirlineName()).ifPresent(flg::setAirlineName);
+            Optional.ofNullable(flight.getALT()).ifPresent(flg::setALT);
+            Optional.ofNullable(flight.getGeolocation()).ifPresent(flg::setGeolocation);
+            Optional.ofNullable(flight.getPrice()).ifPresent(flg::setPrice);
+            Optional.ofNullable(flight.getDuration()).ifPresent(flg::setDuration);
+            Optional.ofNullable(flight.getAbbreviation()).ifPresent(flg::setAbbreviation);
+            Optional.ofNullable(flight.getRating()).ifPresent(flg::setRating);
+            flightsRepository.save(flg);
+
+        });
+        return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
     @DeleteMapping("/deleteFlight/{id}")
