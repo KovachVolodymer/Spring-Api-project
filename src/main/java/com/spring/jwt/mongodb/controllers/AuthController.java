@@ -1,8 +1,6 @@
 package com.spring.jwt.mongodb.controllers;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
@@ -14,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,17 +58,18 @@ public class AuthController {
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+		Map<String, Object> responseMap = new HashMap<>();
+		responseMap.put("token", jwt);
+		responseMap.put("username", userDetails.getUsername());
+		responseMap.put("email", userDetails.getEmail());
+		responseMap.put("avatar", user.getAvatar());
+		responseMap.put("favorites", user.getFavorites());
+
+		return ResponseEntity.ok(responseMap);
 	}
 
 	@PostMapping("/signup")

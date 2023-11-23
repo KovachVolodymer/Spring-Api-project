@@ -23,11 +23,13 @@ public class Hotels {
     private int hotelId;
 
     private String name;
-    private String address;
+    private String price;
+    private String location;
     private String starRating;
     private String description;
-    private List<String> photos;
-    private String pricePerNight;
+
+    private String photo;
+
     private List<String> advantages;
 
 }

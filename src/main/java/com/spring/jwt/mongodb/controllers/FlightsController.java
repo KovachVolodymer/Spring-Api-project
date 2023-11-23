@@ -1,15 +1,17 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Flights;
-import com.spring.jwt.mongodb.models.Hotels;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
@@ -23,9 +25,26 @@ public class FlightsController {
     private FlightsRepository flightsRepository;
 
     @GetMapping("/allFlights")
-    public ResponseEntity<List<Flights>> flights() {
+    public ResponseEntity<List<Map<String, Object>>> flights() {
         List<Flights> flightsList = flightsRepository.findAll();
-        return ResponseEntity.ok(flightsList);
+        List<Map<String, Object>> flightMaps = flightsList.stream()
+                .map(flight -> {
+                    Map<String, Object> flightMap = new HashMap<>();
+                    flightMap.put("flightId", flight.getFlightId());
+                    flightMap.put("airlineLogo", flight.getAirlineLogo());
+                    flightMap.put("airlineName", flight.getAirlineName());
+                    flightMap.put("ALT", flight.getALT());
+                    flightMap.put("geolocation", flight.getGeolocation());
+                    flightMap.put("price", flight.getPrice());
+                    flightMap.put("duration", flight.getDuration());
+                    flightMap.put("abbreviation", flight.getAbbreviation());
+                    flightMap.put("rating", flight.getRating());
+
+                    return flightMap;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(flightMaps);
     }
 
     @GetMapping("/flight/{id}")
@@ -53,47 +72,6 @@ public class FlightsController {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
         if (flightData.isPresent()) {
             Flights _flight = flightData.get();
-
-            if (flight.getFlightName() != null) {
-                _flight.setFlightName(flight.getFlightName());
-            }
-            if (flight.getFlightFrom() != null) {
-                _flight.setFlightFrom(flight.getFlightFrom());
-            }
-            if (flight.getFlightTo() != null) {
-                _flight.setFlightTo(flight.getFlightTo());
-            }
-            if (flight.getFlightDate() != null) {
-                _flight.setFlightDate(flight.getFlightDate());
-            }
-            if (flight.getFlightTime() != null) {
-                _flight.setFlightTime(flight.getFlightTime());
-            }
-            if (flight.getFlightPrice() != null) {
-                _flight.setFlightPrice(flight.getFlightPrice());
-            }
-            if (flight.getFlightDuration() != null) {
-                _flight.setFlightDuration(flight.getFlightDuration());
-            }
-            if (flight.getFlightReviews() != null) {
-                _flight.setFlightReviews(flight.getFlightReviews());
-            }
-            if (flight.getFlightClass() != null) {
-                _flight.setFlightClass(flight.getFlightClass());
-            }
-            if (flight.getFlightSeats() != null) {
-                _flight.setFlightSeats(flight.getFlightSeats());
-            }
-            if (flight.getFlightAirlineLogo() != null) {
-                _flight.setFlightAirlineLogo(flight.getFlightAirlineLogo());
-            }
-            if (flight.getFlightAdvantages() != null) {
-                _flight.setFlightAdvantages(flight.getFlightAdvantages());
-            }
-            if (flight.getFlightPhotos() != null) {
-                _flight.setFlightPhotos(flight.getFlightPhotos());
-            }
-
             return ResponseEntity.ok(flightsRepository.save(_flight));
         } else {
             return ResponseEntity.notFound().build();

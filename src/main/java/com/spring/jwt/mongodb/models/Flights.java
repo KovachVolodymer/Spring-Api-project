@@ -20,19 +20,23 @@ public class Flights {
     @Indexed(unique = true)
     private Integer flightId;
 
-    private String flightName;
-    private String flightFrom;
-    private String flightTo;
-    private String flightDate;
-    private String flightTime;
-    private String flightPrice;
-    private String flightDuration;
-    private String flightReviews;
-    private String flightClass;
-    private String flightSeats;
-    private String flightAirlineLogo;
-    private List<String> flightAdvantages;
-    private List<String> flightPhotos;
+    private String ALT;
+
+    private String geolocation;
+    private String price;
+    private String duration;
+    private String abbreviation;
+    private String rating;
+    private String airlineName;
+    private String departureTime;
+    private String arrivalTime;
+    private String partnerName;
+
+    private String photo;
+    private String airlineLogo;
+    private String partnerLogo;
+
+    private List<String> advantages;
 
 
 }

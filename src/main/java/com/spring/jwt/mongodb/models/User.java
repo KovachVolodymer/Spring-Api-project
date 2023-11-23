@@ -36,6 +36,8 @@ public class User {
   @DBRef
   private Set<Role> roles = new HashSet<>();
 
+  private String avatar;
+
   private List<Favorites> favoritesList = new ArrayList<>();;
 
   public User() {
@@ -48,4 +50,7 @@ public class User {
   }
 
 
+  public Object getFavorites() {
+    return favoritesList;
+  }
 }

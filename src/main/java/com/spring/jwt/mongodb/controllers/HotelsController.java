@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -25,11 +28,26 @@ public class HotelsController {
     @GetMapping("/allHotels")
     public ResponseEntity<List<Hotels>> hotels() {
         List<Hotels> hotelList = hotelsRepository.findAll();
+
+        List<Map<String, Object>> hotelMaps = hotelList.stream()
+                .map(hotel -> {
+                    Map<String, Object> hotelMap = new HashMap<>();
+                    hotelMap.put("hotelId", hotel.getHotelId());
+                    hotelMap.put("name", hotel.getName());
+                    hotelMap.put("location", hotel.getLocation());
+                    hotelMap.put("price", hotel.getPrice());
+                    hotelMap.put("photo", hotel.getPhoto());
+                    hotelMap.put("starRating", hotel.getStarRating());
+                    hotelMap.put("advantages", hotel.getAdvantages());
+                    return hotelMap;
+                })
+                .toList();
+
         return ok(hotelList);
     }
 
     @GetMapping("/hotel/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> hotelById(@PathVariable int id) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
         return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
@@ -55,27 +73,7 @@ public class HotelsController {
         if (hotelData.isPresent()) {
             Hotels _hotel = hotelData.get();
 
-            if (hotel.getName() != null) {
-                _hotel.setName(hotel.getName());
-            }
-            if (hotel.getAddress() != null) {
-                _hotel.setAddress(hotel.getAddress());
-            }
-            if (hotel.getStarRating() != null) {
-                _hotel.setStarRating(hotel.getStarRating());
-            }
-            if (hotel.getDescription() != null) {
-                _hotel.setDescription(hotel.getDescription());
-            }
-            if (hotel.getPhotos() != null) {
-                _hotel.setPhotos(hotel.getPhotos());
-            }
-            if (hotel.getPricePerNight() != null) {
-                _hotel.setPricePerNight(hotel.getPricePerNight());
-            }
-            if (hotel.getAdvantages() != null) {
-                _hotel.setAdvantages(hotel.getAdvantages());
-            }
+
 
             return ResponseEntity.ok(hotelsRepository.save(_hotel));
         } else {
