@@ -67,7 +67,7 @@ public class AuthController {
 		responseMap.put("username", userDetails.getUsername());
 		responseMap.put("email", userDetails.getEmail());
 		responseMap.put("avatar", user.getAvatar());
-		responseMap.put("favorites", user.getFavorites());
+		responseMap.put("favorites", user.getFavoriteItems());
 
 		return ResponseEntity.ok(responseMap);
 	}

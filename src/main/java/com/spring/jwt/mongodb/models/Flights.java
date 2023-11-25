@@ -6,13 +6,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @Document(collection = "flights")
-public class Flights {
+public class Flights  {
 
     @Id
     private String id;
@@ -37,6 +36,10 @@ public class Flights {
     private String partnerLogo;
 
     private List<String> advantages;
+    private List<Reviews> reviewsList;
+
+
+
 
 
 }

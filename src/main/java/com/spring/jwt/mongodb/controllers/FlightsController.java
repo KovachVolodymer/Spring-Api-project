@@ -1,16 +1,14 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Flights;
+import com.spring.jwt.mongodb.models.Reviews;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.notFound;
@@ -106,6 +104,20 @@ public class FlightsController {
     public ResponseEntity<List<Flights>> favoriteFlights(@RequestParam List<String> favoriteFlights) {
         List<Flights> flightsList = flightsRepository.findAllById(favoriteFlights);
         return ResponseEntity.ok(flightsList);
+    }
+
+    @PostMapping("/addReview/{id}")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<Flights> addReview(@PathVariable Integer id, @RequestBody Reviews review) {
+        Optional<Flights> flightData = flightsRepository.findByFlightId(id);
+        flightData.ifPresent(flight -> {
+            if (flight.getReviewsList() == null) {
+                flight.setReviewsList(new ArrayList<>());
+            }
+            flight.getReviewsList().add(review);
+            flightsRepository.save(flight);
+        });
+        return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
 

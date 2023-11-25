@@ -50,7 +50,9 @@ public class User {
   }
 
 
-  public Object getFavorites() {
+  public List<Favorites> getFavoriteItems() {
     return favoritesList;
   }
+
+
 }

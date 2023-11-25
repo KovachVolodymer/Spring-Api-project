@@ -1,14 +1,12 @@
 package com.spring.jwt.mongodb.models;
 
-import jdk.jfr.DataAmount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -31,5 +29,11 @@ public class Hotels {
     private String photo;
 
     private List<String> advantages;
+    private List<Reviews> reviewsList;
+
+    public Hotels() {
+        this.reviewsList = new ArrayList<>();
+    }
+
 
 }

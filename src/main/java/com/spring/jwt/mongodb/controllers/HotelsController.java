@@ -1,19 +1,14 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Hotels;
+import com.spring.jwt.mongodb.models.Reviews;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -100,5 +95,20 @@ public class HotelsController {
         }
     }
 
+
+    @PostMapping("/addReview/{HotelId}")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<Hotels> addReview(@PathVariable Integer HotelId, @RequestBody Reviews review)
+    {
+        Optional<Hotels> hotelData = hotelsRepository.findByHotelId(HotelId);
+        hotelData.ifPresent(h -> {
+            if (h.getReviewsList() == null) {
+                h.setReviewsList(new ArrayList<>());
+            }
+            h.getReviewsList().add(review);
+            hotelsRepository.save(h);
+        });
+        return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
+    }
 
 }
