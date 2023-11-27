@@ -22,7 +22,7 @@ public class FlightsController {
     @Autowired
     private FlightsRepository flightsRepository;
 
-    @GetMapping("/Flights")
+    @GetMapping("")
     public ResponseEntity<List<Map<String, Object>>> flights() {
         List<Flights> flightsList = flightsRepository.findAll();
         List<Map<String, Object>> flightMaps = flightsList.stream()
@@ -45,14 +45,14 @@ public class FlightsController {
         return ResponseEntity.ok(flightMaps);
     }
 
-    @GetMapping("/Flights/{id}")
+    @GetMapping("/{id}")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> flightById(@PathVariable Integer id) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @PostMapping("/Flights")
+    @PostMapping("")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> addFlight(@RequestBody Flights flight) {
             Optional<Flights> existingFlight = flightsRepository.findByFlightId(flight.getFlightId());
@@ -64,7 +64,7 @@ public class FlightsController {
             }
     }
 
-    @PutMapping("/Flights/{id}")
+    @PutMapping("/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> updateFlight(@PathVariable Integer id, @RequestBody Flights flight) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
@@ -83,7 +83,7 @@ public class FlightsController {
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @DeleteMapping("/Flights/{id}")
+    @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteFlight(@PathVariable Integer id) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
@@ -99,14 +99,14 @@ public class FlightsController {
         }
     }
 
-    @GetMapping("/favoriteFlights")
+    @GetMapping("/favorites")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<Flights>> favoriteFlights(@RequestParam List<String> favoriteFlights) {
         List<Flights> flightsList = flightsRepository.findAllById(favoriteFlights);
         return ResponseEntity.ok(flightsList);
     }
 
-    @PostMapping("/Review")
+    @PostMapping("/reviews")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> addReview( @RequestBody Reviews review) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(review.getId());

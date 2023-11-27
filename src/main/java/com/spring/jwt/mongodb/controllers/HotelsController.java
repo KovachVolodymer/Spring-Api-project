@@ -21,7 +21,7 @@ public class HotelsController {
     HotelsRepository hotelsRepository;
 
 
-    @GetMapping("/Hotels")
+    @GetMapping("")
     public ResponseEntity<List<Hotels>> hotels() {
         List<Hotels> hotelList = hotelsRepository.findAll();
 
@@ -42,7 +42,7 @@ public class HotelsController {
         return ok(hotelList);
     }
 
-    @GetMapping("/Hotels/{id}")
+    @GetMapping("/{id}")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> hotelById(@PathVariable int id) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
@@ -50,7 +50,7 @@ public class HotelsController {
     }
 
 
-    @PostMapping("/Hotels")
+    @PostMapping("")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> addHotel(@RequestBody Hotels hotel) {
         Optional<Hotels> existingHotel = hotelsRepository.findByHotelId(hotel.getHotelId());
@@ -62,7 +62,7 @@ public class HotelsController {
         }
     }
 
-    @PutMapping("/Hotels/{id}")
+    @PutMapping("/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> updateHotel(@PathVariable int id, @RequestBody Hotels hotel) {
 
@@ -79,7 +79,7 @@ public class HotelsController {
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @DeleteMapping("/Hotels/{id}")
+    @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteHotel(@PathVariable int id) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
@@ -96,7 +96,7 @@ public class HotelsController {
     }
 
 
-    @PostMapping("/Reviews")
+    @PostMapping("/reviews")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> addReview(@RequestBody Reviews review)
     {
