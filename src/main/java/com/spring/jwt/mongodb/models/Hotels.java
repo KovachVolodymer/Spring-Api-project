@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -35,5 +36,23 @@ public class Hotels {
         this.reviewsList = new ArrayList<>();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Hotels hotels = (Hotels) obj;
+        return Objects.equals(hotelId, hotels.hotelId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hotelId);
+    }
 
 }

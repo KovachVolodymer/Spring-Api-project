@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Favorites;
+import com.spring.jwt.mongodb.models.Flights;
 import com.spring.jwt.mongodb.models.Hotels;
 import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
@@ -9,13 +10,9 @@ import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -30,41 +27,73 @@ public class UserController {
         @Autowired
         FlightsRepository flightsRepository;
 
-        @PostMapping("/addFavorite/{userId}")
-        public ResponseEntity<String> addFavoriteHotel(@PathVariable String userId, @RequestBody Favorites newFavorites) {
-                try {
-                        Optional<User> optionalUser = userRepository.findById(userId);
+        @GetMapping("/favorites")
+        public ResponseEntity<Map<String, Object>> getFavorites(@RequestParam String email) {
+                Optional<User> userOptional = userRepository.findByEmail(email);
+                if (userOptional.isPresent()) {
+                        User user = userOptional.get();
+                        Favorites favorites = user.getFavoritesList().get(0);
+                        Map<String, Object> response = new HashMap<>();
+                        response.put("hotels", favorites.getHotelsList());
+                        response.put("flights", favorites.getFlightsList());
+                        return ResponseEntity.ok(response);
+                } else {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+                }
 
-                        if (optionalUser.isPresent()) {
-                                User user = optionalUser.get();
-                                List<String> existingHotelsID = user.getFavoritesList()
-                                        .stream()
-                                        .flatMap(favorites -> favorites.getHotelsID().stream())
-                                        .collect(Collectors.toList());
+        }
 
-                                existingHotelsID.addAll(newFavorites.getHotelsID());
 
-                                Favorites updatedFavorites = user.getFavoritesList().stream()
-                                        .filter(favorites -> !Collections.disjoint(favorites.getHotelsID(), newFavorites.getHotelsID()))
-                                        .findFirst()
-                                        .orElse(newFavorites);
+        @PostMapping("/favorites")
+        public ResponseEntity<String> addFavoriteHotel(@RequestBody Favorites favorites) {
+                Optional<User> userOptional = userRepository.findByEmail(favorites.getUserEmail());
 
-                                updatedFavorites.getHotelsID().addAll(existingHotelsID);
+                if (userOptional.isPresent()) {
+                        User user = userOptional.get();
 
-                                if (!user.getFavoritesList().contains(updatedFavorites)) {
-                                        user.getFavoritesList().add(updatedFavorites);
-                                }
-
-                                userRepository.save(user);
-
-                                return new ResponseEntity<>("Favorite hotels додано успішно", HttpStatus.CREATED);
+                        // Отримати або створити об'єкт Favorites для користувача
+                        Favorites userFavorites;
+                        if (user.getFavoritesList().isEmpty()) {
+                                userFavorites = new Favorites();
+                                user.setFavoritesList(Arrays.asList(userFavorites));
                         } else {
-                                return new ResponseEntity<>("Користувача з id " + userId + " не знайдено", HttpStatus.NOT_FOUND);
+                                userFavorites = user.getFavoritesList().get(0);
                         }
-                } catch (Exception e) {
-                        return new ResponseEntity<>("Помилка при додаванні улюблених готелів: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+                        // Перевірити, чи існує hotelsId перед викликом intValue()
+                        if (favorites.getHotelsId()!= null) {
+                                Optional<Hotels> hotelOptional = hotelsRepository.findByHotelId(favorites.getHotelsId());
+
+                                if (hotelOptional.isPresent() && !userFavorites.getHotelsList().contains(hotelOptional.get())) {
+                                        userFavorites.getHotelsList().add(hotelOptional.get());
+                                } else {
+                                        // Готель вже існує в списку або не знайдено
+                                        return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel already exists or not found");
+                                }
+                        }
+
+                        // Перевірити, чи існує flightsId перед викликом intValue()
+                        if (favorites.getFlightsId() != null) {
+                                Optional<Flights> flightOptional = flightsRepository.findByFlightId(favorites.getFlightsId());
+
+                                if (flightOptional.isPresent() && !userFavorites.getFlightsList().contains(flightOptional.get())) {
+                                        userFavorites.getFlightsList().add(flightOptional.get());
+                                } else {
+                                        // Політ вже існує в списку або не знайдено
+                                        return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight already exists or not found");
+                                }
+                        }
+
+                        // Зберегти користувача
+                        userRepository.save(user);
+
+                        return ResponseEntity.ok("Favorites added/updated successfully");
+                } else {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
                 }
         }
+
+
 
 
 }

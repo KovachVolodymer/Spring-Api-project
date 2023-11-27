@@ -50,14 +50,5 @@ public class User {
   }
 
 
-  public List<Favorites> getFavoriteItems() {
-    return favoritesList;
-  }
-
-  public void addFavorites(Favorites favorites) {
-    favoritesList.add(favorites);
-  }
-
-
 
 }

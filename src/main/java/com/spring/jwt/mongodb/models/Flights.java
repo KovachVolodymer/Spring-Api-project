@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -39,7 +40,24 @@ public class Flights  {
     private List<Reviews> reviewsList;
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
 
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Flights flights = (Flights) obj;
+        return Objects.equals(flightId, flights.flightId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flightId);
+    }
 
 
 }
