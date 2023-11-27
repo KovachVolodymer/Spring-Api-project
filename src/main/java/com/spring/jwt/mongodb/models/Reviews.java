@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Setter
 @AllArgsConstructor
 public class Reviews {
+   private Integer id;
    private String photo;
    private String name;
    private String rating;

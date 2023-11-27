@@ -22,7 +22,7 @@ public class FlightsController {
     @Autowired
     private FlightsRepository flightsRepository;
 
-    @GetMapping("/allFlights")
+    @GetMapping("/Flights")
     public ResponseEntity<List<Map<String, Object>>> flights() {
         List<Flights> flightsList = flightsRepository.findAll();
         List<Map<String, Object>> flightMaps = flightsList.stream()
@@ -45,14 +45,14 @@ public class FlightsController {
         return ResponseEntity.ok(flightMaps);
     }
 
-    @GetMapping("/flight/{id}")
+    @GetMapping("/Flights/{id}")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> flightById(@PathVariable Integer id) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @PostMapping("/addFlight")
+    @PostMapping("/Flights")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> addFlight(@RequestBody Flights flight) {
             Optional<Flights> existingFlight = flightsRepository.findByFlightId(flight.getFlightId());
@@ -64,7 +64,7 @@ public class FlightsController {
             }
     }
 
-    @PutMapping("/updateFlight/{id}")
+    @PutMapping("/Flights/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> updateFlight(@PathVariable Integer id, @RequestBody Flights flight) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
@@ -83,7 +83,7 @@ public class FlightsController {
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @DeleteMapping("/deleteFlight/{id}")
+    @DeleteMapping("/Flights/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteFlight(@PathVariable Integer id) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(id);
@@ -106,10 +106,10 @@ public class FlightsController {
         return ResponseEntity.ok(flightsList);
     }
 
-    @PostMapping("/addReview/{id}")
+    @PostMapping("/Review")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Flights> addReview(@PathVariable Integer id, @RequestBody Reviews review) {
-        Optional<Flights> flightData = flightsRepository.findByFlightId(id);
+    public ResponseEntity<Flights> addReview( @RequestBody Reviews review) {
+        Optional<Flights> flightData = flightsRepository.findByFlightId(review.getId());
         flightData.ifPresent(flight -> {
             if (flight.getReviewsList() == null) {
                 flight.setReviewsList(new ArrayList<>());

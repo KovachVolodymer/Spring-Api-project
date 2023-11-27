@@ -21,7 +21,7 @@ public class HotelsController {
     HotelsRepository hotelsRepository;
 
 
-    @GetMapping("/allHotels")
+    @GetMapping("/Hotels")
     public ResponseEntity<List<Hotels>> hotels() {
         List<Hotels> hotelList = hotelsRepository.findAll();
 
@@ -42,7 +42,7 @@ public class HotelsController {
         return ok(hotelList);
     }
 
-    @GetMapping("/hotel/{id}")
+    @GetMapping("/Hotels/{id}")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> hotelById(@PathVariable int id) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
@@ -50,7 +50,7 @@ public class HotelsController {
     }
 
 
-    @PostMapping("/addHotel")
+    @PostMapping("/Hotels")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> addHotel(@RequestBody Hotels hotel) {
         Optional<Hotels> existingHotel = hotelsRepository.findByHotelId(hotel.getHotelId());
@@ -62,7 +62,7 @@ public class HotelsController {
         }
     }
 
-    @PutMapping("/updateHotel/{id}")
+    @PutMapping("/Hotels/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotels> updateHotel(@PathVariable int id, @RequestBody Hotels hotel) {
 
@@ -79,7 +79,7 @@ public class HotelsController {
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @DeleteMapping("/deleteHotel/{id}")
+    @DeleteMapping("/Hotels/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteHotel(@PathVariable int id) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(id);
@@ -96,11 +96,11 @@ public class HotelsController {
     }
 
 
-    @PostMapping("/addReview/{HotelId}")
+    @PostMapping("/Reviews")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Hotels> addReview(@PathVariable Integer HotelId, @RequestBody Reviews review)
+    public ResponseEntity<Hotels> addReview(@RequestBody Reviews review)
     {
-        Optional<Hotels> hotelData = hotelsRepository.findByHotelId(HotelId);
+        Optional<Hotels> hotelData = hotelsRepository.findByHotelId(review.getId());
         hotelData.ifPresent(h -> {
             if (h.getReviewsList() == null) {
                 h.setReviewsList(new ArrayList<>());

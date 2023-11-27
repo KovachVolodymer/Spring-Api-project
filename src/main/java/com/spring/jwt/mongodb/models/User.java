@@ -54,5 +54,10 @@ public class User {
     return favoritesList;
   }
 
+  public void addFavorites(Favorites favorites) {
+    favoritesList.add(favorites);
+  }
+
+
 
 }
