@@ -10,6 +10,7 @@ import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -26,6 +27,9 @@ public class UserController {
 
         @Autowired
         FlightsRepository flightsRepository;
+
+        @Autowired
+        PasswordEncoder encoder;
 
         @GetMapping("/favorites")
         public ResponseEntity<Map<String, Object>> getFavorites(@RequestParam String email) {
@@ -92,6 +96,37 @@ public class UserController {
                         return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
                 }
         }
+
+
+       @PatchMapping("/email")
+        public ResponseEntity<String> SetNewEmail(@RequestBody User user) {
+                Optional<User> userOptional = userRepository.findById(user.getId());
+                if (userOptional.isPresent() && !userRepository.existsByEmail(user.getEmail())) {
+                        User userData = userOptional.get();
+                        userData.setEmail(user.getEmail());
+                        userRepository.save(userData);
+                        return ResponseEntity.ok("Email changed successfully");
+                } else {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found or email already exists");
+                }
+        }
+
+        @PatchMapping("/password")
+        public ResponseEntity<String> SetNewPassword(@RequestBody User user) {
+                Optional<User> userOptional = userRepository.findById(user.getId());
+                if (userOptional.isPresent()) {
+                        User userData = userOptional.get();
+                        userData.setPassword(encoder.encode(user.getPassword()));
+                        userRepository.save(userData);
+                        return ResponseEntity.ok("Password changed successfully");
+                } else {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
+                }
+        }
+
+
+
+
 
 
 
