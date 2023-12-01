@@ -38,7 +38,19 @@ public class User {
 
   private String avatar;
 
-  private List<Favorites> favoritesList = new ArrayList<>();;
+  private String phone;
+
+  private String address;
+
+  private String dataBirth;
+
+  private String newEmail;
+
+  private List<Favorites> favoritesList = new ArrayList<>();
+
+  private List<String> resentsSearch = new ArrayList<>();
+
+
 
   public User() {
   }

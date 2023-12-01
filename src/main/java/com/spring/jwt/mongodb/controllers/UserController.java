@@ -98,31 +98,35 @@ public class UserController {
         }
 
 
-       @PatchMapping("/email")
-        public ResponseEntity<String> SetNewEmail(@RequestBody User user) {
-                Optional<User> userOptional = userRepository.findById(user.getId());
-                if (userOptional.isPresent() && !userRepository.existsByEmail(user.getEmail())) {
-                        User userData = userOptional.get();
-                        userData.setEmail(user.getEmail());
-                        userRepository.save(userData);
-                        return ResponseEntity.ok("Email changed successfully");
-                } else {
-                        return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found or email already exists");
-                }
-        }
+       @PatchMapping("")
+       public ResponseEntity<String> updatePassword(@RequestBody User user) {
+               Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
 
-        @PatchMapping("/password")
-        public ResponseEntity<String> SetNewPassword(@RequestBody User user) {
-                Optional<User> userOptional = userRepository.findById(user.getId());
-                if (userOptional.isPresent()) {
-                        User userData = userOptional.get();
-                        userData.setPassword(encoder.encode(user.getPassword()));
-                        userRepository.save(userData);
-                        return ResponseEntity.ok("Password changed successfully");
-                } else {
-                        return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
-                }
-        }
+               if (userOptional.isPresent()) {
+                       User u = userOptional.get();
+                       Optional.ofNullable(user.getUsername()).ifPresent(u::setUsername);
+                       Optional.ofNullable(user.getAddress()).ifPresent(u::setAddress);
+                       Optional.ofNullable(user.getPhone()).ifPresent(u::setPhone);
+                       Optional.ofNullable(user.getDataBirth()).ifPresent(u::setDataBirth);
+                       Optional.ofNullable(user.getPassword()).ifPresent(p -> u.setPassword(encoder.encode(p)));
+                       if (!userRepository.existsByEmail(user.getNewEmail())) {
+                               u.setEmail(user.getNewEmail());
+                       }
+                       else if (u.getNewEmail()==null ){
+                               u.setEmail(user.getEmail());
+                       }
+                       else{
+                               return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
+                       }
+
+                       userRepository.save(u);
+                       return ResponseEntity.ok("User updated successfully");
+               } else {
+                       return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
+               }
+       }
+
+
 
 
 

@@ -31,7 +31,7 @@ public class FlightsController {
                     flightMap.put("flightId", flight.getFlightId());
                     flightMap.put("airlineLogo", flight.getAirlineLogo());
                     flightMap.put("airlineName", flight.getAirlineName());
-                    flightMap.put("ALT", flight.getALT());
+                    flightMap.put("ALT", flight.getAlt());
                     flightMap.put("geolocation", flight.getGeolocation());
                     flightMap.put("price", flight.getPrice());
                     flightMap.put("duration", flight.getDuration());
@@ -71,12 +71,13 @@ public class FlightsController {
         flightData.ifPresent(flg -> {
             Optional.ofNullable(flight.getAirlineLogo()).ifPresent(flg::setAirlineLogo);
             Optional.ofNullable(flight.getAirlineName()).ifPresent(flg::setAirlineName);
-            Optional.ofNullable(flight.getALT()).ifPresent(flg::setALT);
+            Optional.ofNullable(flight.getAlt()).ifPresent(flg::setAlt);
             Optional.ofNullable(flight.getGeolocation()).ifPresent(flg::setGeolocation);
             Optional.ofNullable(flight.getPrice()).ifPresent(flg::setPrice);
             Optional.ofNullable(flight.getDuration()).ifPresent(flg::setDuration);
             Optional.ofNullable(flight.getAbbreviation()).ifPresent(flg::setAbbreviation);
             Optional.ofNullable(flight.getRating()).ifPresent(flg::setRating);
+            Optional.ofNullable(flight.getAdvantages()).ifPresent(flg::setAdvantages);
             flightsRepository.save(flg);
 
         });

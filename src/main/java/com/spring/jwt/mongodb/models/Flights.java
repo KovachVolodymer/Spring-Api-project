@@ -20,7 +20,7 @@ public class Flights  {
     @Indexed(unique = true)
     private Integer flightId;
 
-    private String ALT;
+    private String alt;
 
     private String geolocation;
     private String price;
@@ -31,6 +31,8 @@ public class Flights  {
     private String departureTime;
     private String arrivalTime;
     private String partnerName;
+    private String fromArrive;
+    private String toArrive;
 
     private String photo;
     private String airlineLogo;
