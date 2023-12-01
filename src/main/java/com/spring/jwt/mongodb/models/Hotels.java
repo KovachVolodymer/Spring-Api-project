@@ -19,7 +19,7 @@ public class Hotels {
     private String id;
 
     @Indexed(unique = true)
-    private int hotelId;
+    private Integer hotelId;
 
     private String name;
     private String price;

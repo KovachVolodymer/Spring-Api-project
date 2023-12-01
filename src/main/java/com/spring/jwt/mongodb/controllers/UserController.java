@@ -56,12 +56,14 @@ public class UserController {
                         User user = userOptional.get();
 
                         // Отримати або створити об'єкт Favorites для користувача
+                        List<Favorites> userFavoritesList = user.getFavoritesList();
+
                         Favorites userFavorites;
-                        if (user.getFavoritesList().isEmpty()) {
+                        if (userFavoritesList.isEmpty()) {
                                 userFavorites = new Favorites();
-                                user.setFavoritesList(Arrays.asList(userFavorites));
+                                userFavoritesList.add(userFavorites);
                         } else {
-                                userFavorites = user.getFavoritesList().get(0);
+                                userFavorites = userFavoritesList.get(0);
                         }
 
                         // Перевірити, чи існує hotelsId перед викликом intValue()
@@ -92,6 +94,47 @@ public class UserController {
                         userRepository.save(user);
 
                         return ResponseEntity.ok("Favorites added/updated successfully");
+                } else {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
+                }
+        }
+
+        @DeleteMapping("/favorites")
+        public ResponseEntity<String> deleteFavorite(
+                @RequestBody Favorites favorites
+        ) {
+                String userEmail = favorites.getUserEmail();
+                Integer hotelId = favorites.getHotelsId();
+                Integer flightId = favorites.getFlightsId();
+
+                Optional<User> userOptional = userRepository.findByEmail(userEmail);
+
+                if (userOptional.isPresent()) {
+                        User user = userOptional.get();
+
+                        // Отримати або створити об'єкт Favorites для користувача
+                        List<Favorites> userFavoritesList = user.getFavoritesList();
+
+                        if (!userFavoritesList.isEmpty()) {
+                                Favorites userFavorites = userFavoritesList.get(0);
+
+                                // Видалити готель зі списку
+                                if (hotelId != null) {
+                                        userFavorites.getHotelsList().removeIf(hotel -> hotel.getHotelId().equals(hotelId));
+                                }
+
+                                // Видалити рейс зі списку
+                                if (flightId != null) {
+                                        userFavorites.getFlightsList().removeIf(flight -> flight.getFlightId().equals(flightId));
+                                }
+
+                                // Зберегти користувача
+                                userRepository.save(user);
+
+                                return ResponseEntity.ok("Favorite deleted successfully");
+                        } else {
+                                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Favorites not found for the user");
+                        }
                 } else {
                         return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
                 }

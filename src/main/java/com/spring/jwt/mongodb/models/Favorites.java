@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Favorites {
+
     private String userEmail;
     private Integer hotelsId;
     private Integer flightsId;
