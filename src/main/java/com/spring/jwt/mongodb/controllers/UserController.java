@@ -142,7 +142,7 @@ public class UserController {
 
 
        @PatchMapping("")
-       public ResponseEntity<String> updatePassword(@RequestBody User user) {
+       public ResponseEntity<String> updateUser(@RequestBody User user) {
                Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
 
                if (userOptional.isPresent()) {
@@ -151,16 +151,31 @@ public class UserController {
                        Optional.ofNullable(user.getAddress()).ifPresent(u::setAddress);
                        Optional.ofNullable(user.getPhone()).ifPresent(u::setPhone);
                        Optional.ofNullable(user.getDataBirth()).ifPresent(u::setDataBirth);
+                       Optional.ofNullable(user.getAvatar()).ifPresent(u::setAvatar);
                        Optional.ofNullable(user.getPassword()).ifPresent(p -> u.setPassword(encoder.encode(p)));
-                       if (!userRepository.existsByEmail(user.getNewEmail())) {
+                       if(user.getUsername()==null)
+                       {
+                               u.setUsername(u.getUsername());
+                       }
+                       else if(userRepository.existsByUsername(user.getUsername()))
+                       {
+                               u.setUsername(u.getUsername());
+                               return  ResponseEntity.status(HttpStatus.CONFLICT).body("User name already exists");
+                       }
+                       else {
+                               u.setUsername(user.getUsername());
+                       }
+                       if(user.getNewEmail()==null)
+                       {
+                               u.setEmail(u.getEmail());
+                       } else if (userRepository.existsByEmail(user.getNewEmail())) {
+                               u.setEmail(u.getEmail());
+                               return ResponseEntity.status(HttpStatus.CONFLICT).body("Email name already exists");
+                       }
+                       else {
                                u.setEmail(user.getNewEmail());
                        }
-                       else if (u.getNewEmail()==null ){
-                               u.setEmail(user.getEmail());
-                       }
-                       else{
-                               return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
-                       }
+
 
                        userRepository.save(u);
                        return ResponseEntity.ok("User updated successfully");
