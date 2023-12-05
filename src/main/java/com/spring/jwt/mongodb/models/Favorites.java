@@ -13,8 +13,8 @@ import java.util.List;
 public class Favorites {
 
     private String userId;
-    private Integer hotelsId;
-    private Integer flightsId;
+    private Integer hotelId;
+    private Integer flightId;
     private List<Hotels> hotelsList = new ArrayList<>();
     private List<Flights> flightsList = new ArrayList<>();
 

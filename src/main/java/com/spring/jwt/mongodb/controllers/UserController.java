@@ -70,8 +70,8 @@ public class UserController {
             }
 
             // Перевірити, чи існує hotelsId перед викликом intValue()
-            if (favorites.getHotelsId() != null) {
-                Optional<Hotels> hotelOptional = hotelsRepository.findByHotelId(favorites.getHotelsId());
+            if (favorites.getHotelId() != null) {
+                Optional<Hotels> hotelOptional = hotelsRepository.findByHotelId(favorites.getHotelId());
 
                 if (hotelOptional.isPresent() && !userFavorites.getHotelsList().contains(hotelOptional.get())) {
                     userFavorites.getHotelsList().add(hotelOptional.get());
@@ -82,8 +82,8 @@ public class UserController {
             }
 
             // Перевірити, чи існує flightsId перед викликом intValue()
-            if (favorites.getFlightsId() != null) {
-                Optional<Flights> flightOptional = flightsRepository.findByFlightId(favorites.getFlightsId());
+            if (favorites.getFlightId() != null) {
+                Optional<Flights> flightOptional = flightsRepository.findByFlightId(favorites.getFlightId());
 
                 if (flightOptional.isPresent() && !userFavorites.getFlightsList().contains(flightOptional.get())) {
                     userFavorites.getFlightsList().add(flightOptional.get());
@@ -107,8 +107,8 @@ public class UserController {
             @RequestBody Favorites favorites
     ) {
         String userId = favorites.getUserId();
-        Integer hotelId = favorites.getHotelsId();
-        Integer flightId = favorites.getFlightsId();
+        Integer hotelId = favorites.getHotelId();
+        Integer flightId = favorites.getFlightId();
 
         Optional<User> userOptional = userRepository.findById(userId);
 
