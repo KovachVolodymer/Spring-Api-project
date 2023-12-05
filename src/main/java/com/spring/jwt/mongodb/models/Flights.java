@@ -12,7 +12,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @Document(collection = "flights")
-public class Flights  {
+public class Flights {
 
     @Id
     private String id;

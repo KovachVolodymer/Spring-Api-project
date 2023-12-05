@@ -55,13 +55,13 @@ public class FlightsController {
     @PostMapping("")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> addFlight(@RequestBody Flights flight) {
-            Optional<Flights> existingFlight = flightsRepository.findByFlightId(flight.getFlightId());
-            if (existingFlight.isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-            } else {
-                Flights newFlight = flightsRepository.save(flight);
-                return ResponseEntity.ok(newFlight);
-            }
+        Optional<Flights> existingFlight = flightsRepository.findByFlightId(flight.getFlightId());
+        if (existingFlight.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        } else {
+            Flights newFlight = flightsRepository.save(flight);
+            return ResponseEntity.ok(newFlight);
+        }
     }
 
     @PutMapping("/{id}")
@@ -109,7 +109,7 @@ public class FlightsController {
 
     @PostMapping("/reviews")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Flights> addReview( @RequestBody Reviews review) {
+    public ResponseEntity<Flights> addReview(@RequestBody Reviews review) {
         Optional<Flights> flightData = flightsRepository.findByFlightId(review.getId());
         flightData.ifPresent(flight -> {
             if (flight.getReviewsList() == null) {
@@ -120,7 +120,6 @@ public class FlightsController {
         });
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
-
 
 
 }

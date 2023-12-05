@@ -68,13 +68,13 @@ public class HotelsController {
 
         Optional<Hotels> optionalHotel = hotelsRepository.findByHotelId(id);
         optionalHotel.ifPresent(h -> {
-           Optional.ofNullable(hotel.getName()).ifPresent(h::setName);
-           Optional.ofNullable(hotel.getLocation()).ifPresent(h::setLocation);
-           Optional.ofNullable(hotel.getPrice()).ifPresent(h::setPrice);
-           Optional.ofNullable(hotel.getPhoto()).ifPresent(h::setPhoto);
-           Optional.ofNullable(hotel.getStarRating()).ifPresent(h::setStarRating);
-           Optional.ofNullable(hotel.getAdvantages()).ifPresent(h::setAdvantages);
-           hotelsRepository.save(h);
+            Optional.ofNullable(hotel.getName()).ifPresent(h::setName);
+            Optional.ofNullable(hotel.getLocation()).ifPresent(h::setLocation);
+            Optional.ofNullable(hotel.getPrice()).ifPresent(h::setPrice);
+            Optional.ofNullable(hotel.getPhoto()).ifPresent(h::setPhoto);
+            Optional.ofNullable(hotel.getStarRating()).ifPresent(h::setStarRating);
+            Optional.ofNullable(hotel.getAdvantages()).ifPresent(h::setAdvantages);
+            hotelsRepository.save(h);
         });
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
@@ -98,8 +98,7 @@ public class HotelsController {
 
     @PostMapping("/reviews")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Hotels> addReview(@RequestBody Reviews review)
-    {
+    public ResponseEntity<Hotels> addReview(@RequestBody Reviews review) {
         Optional<Hotels> hotelData = hotelsRepository.findByHotelId(review.getId());
         hotelData.ifPresent(h -> {
             if (h.getReviewsList() == null) {

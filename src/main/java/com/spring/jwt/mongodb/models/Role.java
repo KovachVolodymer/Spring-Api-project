@@ -9,18 +9,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Document(collection = "roles")
 public class Role {
-  @Id
-  private String id;
+    @Id
+    private String id;
 
-  private ERole name;
+    private ERole name;
 
-  public Role() {
+    public Role() {
 
-  }
+    }
 
-  public Role(ERole name) {
-    this.name = name;
-  }
+    public Role(ERole name) {
+        this.name = name;
+    }
 
 
 }

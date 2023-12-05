@@ -12,6 +12,11 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.query.Update;
+
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Getter
 @Setter
@@ -48,12 +53,8 @@ public class User {
 
   private List<Favorites> favoritesList = new ArrayList<>();
 
-  private List<String> resentsSearch = new ArrayList<>();
+  private List<RecentSearch> recentSearches=new ArrayList<>();
 
-
-
-  public User() {
-  }
 
   public User(String username, String email, String password) {
     this.username = username;

@@ -12,7 +12,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Favorites {
 
-    private String userEmail;
+    private String userId;
     private Integer hotelsId;
     private Integer flightsId;
     private List<Hotels> hotelsList = new ArrayList<>();
