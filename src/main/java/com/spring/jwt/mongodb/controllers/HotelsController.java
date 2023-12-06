@@ -62,7 +62,7 @@ public class HotelsController {
                     .replaceAll("[^a-z0-9_-]", "");
             hotel.setSlug(slug);
             Hotels newHotel = hotelsRepository.save(hotel);
-            return ResponseEntity.ok(newHotel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newHotel);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Flights;
-import com.spring.jwt.mongodb.models.Reviews;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,46 +27,67 @@ public class FlightsController {
         List<Map<String, Object>> flightMaps = flightsList.stream()
                 .map(flight -> {
                     Map<String, Object> flightMap = new HashMap<>();
-                    flightMap.put("flightId", flight.getFlightId());
-                    flightMap.put("airlineLogo", flight.getAirlineLogo());
+                    flightMap.put("flightId", flight.getId());
+                    flightMap.put("photo", flight.getPhoto());
                     flightMap.put("airlineName", flight.getAirlineName());
-                    flightMap.put("ALT", flight.getAlt());
-                    flightMap.put("geolocation", flight.getGeolocation());
-                    flightMap.put("price", flight.getPrice());
-                    flightMap.put("duration", flight.getDuration());
-                    flightMap.put("abbreviation", flight.getAbbreviation());
                     flightMap.put("rating", flight.getRating());
-
+                    flightMap.put("price", flight.getPrice());
+                    flightMap.put("location", flight.getGeolocation());
+                    flightMap.put("reviews", flight.getReviewsList());
                     return flightMap;
                 })
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(flightMaps);
+        return ok(flightMaps);
     }
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Flights> flightById(@PathVariable Integer id) {
-        Optional<Flights> flightData = flightsRepository.findByFlightId(id);
+    public ResponseEntity<Flights> flightById(@PathVariable String id) {
+        Optional<Flights> flightData = flightsRepository.findById(id);
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
     @PostMapping("")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flights> addFlight(@RequestBody Flights flight) {
-        Optional<Flights> existingFlight = flightsRepository.findByFlightId(flight.getFlightId());
-        if (existingFlight.isPresent()) {
+        if (flight.getId() != null && flightsRepository.existsById(flight.getId())) {
+            // If a flight with the specified id already exists, return a conflict response
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         } else {
-            Flights newFlight = flightsRepository.save(flight);
-            return ResponseEntity.ok(newFlight);
+            // If no id is specified or there is no existing flight with the given id, save the new flight
+            String slug = flight.getAirlineName().toLowerCase()
+                    .replaceAll(" ", "_")
+                    .replaceAll("[^a-z0-9_-]", "");
+            flight.setSlug(slug);
+            Flights savedFlight = flightsRepository.save(flight);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedFlight);
         }
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Flights> updateFlight(@PathVariable Integer id, @RequestBody Flights flight) {
-        Optional<Flights> flightData = flightsRepository.findByFlightId(id);
+    public ResponseEntity<Flights> updateFlight(@PathVariable String id, @RequestBody Flights flight) {
+        Optional<Flights> flightData = flightsRepository.findById(id);
+        if (flightData.isPresent()) {
+            Flights saveFlight = flightData.get();
+            saveFlight.setAirlineName(flight.getAirlineName());
+            saveFlight.setPrice(flight.getPrice());
+            saveFlight.setRating(flight.getRating());
+            saveFlight.setPhoto(flight.getPhoto());
+            saveFlight.setGeolocation(flight.getGeolocation());
+            saveFlight.setDuration(flight.getDuration());
+            saveFlight.setAbbreviation(flight.getAbbreviation());
+            saveFlight.setAlt(flight.getAlt());
+            saveFlight.setPartnerName(flight.getPartnerName());
+            saveFlight.setFromArrive(flight.getFromArrive());
+            saveFlight.setToArrive(flight.getToArrive());
+            return new ResponseEntity<>(flightsRepository.save(saveFlight), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Flights> PatchFlight(@PathVariable String id, @RequestBody Flights flight) {
+        Optional<Flights> flightData = flightsRepository.findById(id);
         flightData.ifPresent(flg -> {
             Optional.ofNullable(flight.getAirlineLogo()).ifPresent(flg::setAirlineLogo);
             Optional.ofNullable(flight.getAirlineName()).ifPresent(flg::setAirlineName);
@@ -85,27 +105,22 @@ public class FlightsController {
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<String> deleteFlight(@PathVariable Integer id) {
-        Optional<Flights> flightData = flightsRepository.findByFlightId(id);
+    public ResponseEntity<String> deleteFlight(@PathVariable String id) {
+        Optional<Flights> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {
             try {
-                flightsRepository.deleteByFlightId(id);
-                return ResponseEntity.ok("Політ було успішно видалено.");
+                flightsRepository.deleteById(id);
+                return ResponseEntity.ok("Flight was successfully deleted.");
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Помилка при видаленні політу.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight not found");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Політ з вказаним ID не знайдено.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight not found");
         }
     }
 
-    @GetMapping("/favorites")
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<List<Flights>> favoriteFlights(@RequestParam List<String> favoriteFlights) {
-        List<Flights> flightsList = flightsRepository.findAllById(favoriteFlights);
-        return ResponseEntity.ok(flightsList);
-    }
+
+
 
 
 

@@ -16,8 +16,8 @@ public class Favorites {
     private String id;
 
 
-    private Integer hotelId;
-    private Integer flightId;
+    private String hotelId;
+    private String flightId;
     private List<Hotels> hotelsList = new ArrayList<>();
     private List<Flights> flightsList = new ArrayList<>();
 

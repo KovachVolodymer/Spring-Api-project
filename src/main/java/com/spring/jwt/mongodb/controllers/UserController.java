@@ -83,7 +83,7 @@ public class UserController {
 
             // Перевірити, чи існує flightsId перед викликом intValue()
             if (favorites.getFlightId() != null) {
-                Optional<Flights> flightOptional = flightsRepository.findByFlightId(favorites.getFlightId());
+                Optional<Flights> flightOptional = flightsRepository.findById(favorites.getFlightId());
 
                 if (flightOptional.isPresent() && !userFavorites.getFlightsList().contains(flightOptional.get())) {
                     userFavorites.getFlightsList().add(flightOptional.get());
@@ -108,7 +108,7 @@ public class UserController {
     ) {
         String userId = favorites.getId();
         String hotelId = favorites.getId();
-        Integer flightId = favorites.getFlightId();
+        String flightId = favorites.getFlightId();
 
         Optional<User> userOptional = userRepository.findById(userId);
 
