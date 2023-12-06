@@ -107,19 +107,7 @@ public class FlightsController {
         return ResponseEntity.ok(flightsList);
     }
 
-    @PostMapping("/reviews")
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Flights> addReview(@RequestBody Reviews review) {
-        Optional<Flights> flightData = flightsRepository.findByFlightId(review.getId());
-        flightData.ifPresent(flight -> {
-            if (flight.getReviewsList() == null) {
-                flight.setReviewsList(new ArrayList<>());
-            }
-            flight.getReviewsList().add(review);
-            flightsRepository.save(flight);
-        });
-        return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
-    }
+
 
 
 }

@@ -51,9 +51,9 @@ public class UserController {
     }
 
 
-    @PostMapping("/favorites")
-    public ResponseEntity<String> addFavoriteHotel(@RequestBody Favorites favorites) {
-        Optional<User> userOptional = userRepository.findById(favorites.getUserId());
+    @PostMapping("/favorites/{id}")
+    public ResponseEntity<String> addFavoriteHotel(@PathVariable String id,@RequestBody Favorites favorites) {
+        Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -70,8 +70,8 @@ public class UserController {
             }
 
             // Перевірити, чи існує hotelsId перед викликом intValue()
-            if (favorites.getHotelId() != null) {
-                Optional<Hotels> hotelOptional = hotelsRepository.findByHotelId(favorites.getHotelId());
+            if (favorites.getId() != null) {
+                Optional<Hotels> hotelOptional = hotelsRepository.findById(favorites.getId());
 
                 if (hotelOptional.isPresent() && !userFavorites.getHotelsList().contains(hotelOptional.get())) {
                     userFavorites.getHotelsList().add(hotelOptional.get());
@@ -106,8 +106,8 @@ public class UserController {
     public ResponseEntity<String> deleteFavorite(
             @RequestBody Favorites favorites
     ) {
-        String userId = favorites.getUserId();
-        Integer hotelId = favorites.getHotelId();
+        String userId = favorites.getId();
+        String hotelId = favorites.getId();
         Integer flightId = favorites.getFlightId();
 
         Optional<User> userOptional = userRepository.findById(userId);
@@ -123,7 +123,7 @@ public class UserController {
 
                 // Видалити готель зі списку
                 if (hotelId != null) {
-                    userFavorites.getHotelsList().removeIf(hotel -> hotel.getHotelId().equals(hotelId));
+                    userFavorites.getHotelsList().removeIf(hotel -> hotel.getId().equals(hotelId));
                 }
 
                 // Видалити рейс зі списку
@@ -231,6 +231,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
         }
     }
+
 
 
 }

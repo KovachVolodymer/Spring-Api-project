@@ -2,6 +2,7 @@ package com.spring.jwt.mongodb.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Favorites {
+    @Id
+    private String id;
 
-    private String userId;
+
     private Integer hotelId;
     private Integer flightId;
     private List<Hotels> hotelsList = new ArrayList<>();
