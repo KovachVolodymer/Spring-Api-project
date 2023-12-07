@@ -92,7 +92,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                         .permitAll().requestMatchers("/api/hotels/**")
                         .permitAll().requestMatchers("/api/flights/**").permitAll()
                         .requestMatchers("/api/user/**").permitAll().
-                        anyRequest().authenticated());
+                        anyRequest().permitAll());
 
 
         http.authenticationProvider(authenticationProvider());

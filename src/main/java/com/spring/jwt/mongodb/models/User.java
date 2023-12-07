@@ -2,21 +2,16 @@ package com.spring.jwt.mongodb.models;
 
 import java.util.*;
 
+import com.spring.jwt.mongodb.models.subModels.RecentSearch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.query.Update;
-
-import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Getter
 @Setter
@@ -51,7 +46,9 @@ public class User {
 
   private String newEmail;
 
-  private List<Favorites> favoritesList = new ArrayList<>();
+  private List<Hotel> favoritesListHotels = new ArrayList<>();
+
+  private List<Flight> favoritesListFlights = new ArrayList<>();
 
   private List<RecentSearch> recentSearches=new ArrayList<>();
 

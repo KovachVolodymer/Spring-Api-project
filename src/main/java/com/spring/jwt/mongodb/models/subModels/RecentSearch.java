@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.models;
+package com.spring.jwt.mongodb.models.subModels;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,6 @@ import org.springframework.data.annotation.Id;
 @Setter
 @AllArgsConstructor
 public class RecentSearch {
-
-    private String userId;
 
     @Id
     private Integer id;

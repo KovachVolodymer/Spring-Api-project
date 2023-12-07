@@ -1,7 +1,6 @@
 package com.spring.jwt.mongodb.controllers;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import jakarta.validation.Valid;
@@ -20,12 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.spring.jwt.mongodb.models.ERole;
+import com.spring.jwt.mongodb.models.subModels.ERole;
 import com.spring.jwt.mongodb.models.Role;
 import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.payload.request.LoginRequest;
 import com.spring.jwt.mongodb.payload.request.SignupRequest;
-import com.spring.jwt.mongodb.payload.response.JwtResponse;
 import com.spring.jwt.mongodb.repository.RoleRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import com.spring.jwt.mongodb.security.jwt.JwtUtils;
@@ -68,8 +66,9 @@ public class AuthController {
         responseMap.put("username", userDetails.getUsername());
         responseMap.put("email", userDetails.getEmail());
         responseMap.put("avatar", user.getAvatar());
-        responseMap.put("favorites", user.getFavoritesList());
-
+        responseMap.put("favoritesHotel", user.getFavoritesListHotels());
+        responseMap.put("favoritesFlight", user.getFavoritesListFlights());
+        responseMap.put("recentSearches", user.getRecentSearches());
         return ResponseEntity.ok(responseMap);
     }
 

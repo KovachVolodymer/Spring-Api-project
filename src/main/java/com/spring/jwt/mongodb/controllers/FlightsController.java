@@ -1,7 +1,9 @@
 package com.spring.jwt.mongodb.controllers;
 
-import com.spring.jwt.mongodb.models.Flights;
+import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
+import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,12 @@ public class FlightsController {
     @Autowired
     private FlightsRepository flightsRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("")
     public ResponseEntity<List<Map<String, Object>>> flights() {
-        List<Flights> flightsList = flightsRepository.findAll();
+        List<Flight> flightsList = flightsRepository.findAll();
         List<Map<String, Object>> flightMaps = flightsList.stream()
                 .map(flight -> {
                     Map<String, Object> flightMap = new HashMap<>();
@@ -42,13 +47,13 @@ public class FlightsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Flights> flightById(@PathVariable String id) {
-        Optional<Flights> flightData = flightsRepository.findById(id);
+    public ResponseEntity<Flight> flightById(@PathVariable String id) {
+        Optional<Flight> flightData = flightsRepository.findById(id);
         return flightData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
     @PostMapping("")
-    public ResponseEntity<Flights> addFlight(@RequestBody Flights flight) {
+    public ResponseEntity<Flight> addFlight(@RequestBody Flight flight) {
         if (flight.getId() != null && flightsRepository.existsById(flight.getId())) {
             // If a flight with the specified id already exists, return a conflict response
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
@@ -58,16 +63,16 @@ public class FlightsController {
                     .replaceAll(" ", "_")
                     .replaceAll("[^a-z0-9_-]", "");
             flight.setSlug(slug);
-            Flights savedFlight = flightsRepository.save(flight);
+            Flight savedFlight = flightsRepository.save(flight);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFlight);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Flights> updateFlight(@PathVariable String id, @RequestBody Flights flight) {
-        Optional<Flights> flightData = flightsRepository.findById(id);
+    public ResponseEntity<Flight> updateFlight(@PathVariable String id, @RequestBody Flight flight) {
+        Optional<Flight> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {
-            Flights saveFlight = flightData.get();
+            Flight saveFlight = flightData.get();
             saveFlight.setAirlineName(flight.getAirlineName());
             saveFlight.setPrice(flight.getPrice());
             saveFlight.setRating(flight.getRating());
@@ -86,8 +91,8 @@ public class FlightsController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Flights> PatchFlight(@PathVariable String id, @RequestBody Flights flight) {
-        Optional<Flights> flightData = flightsRepository.findById(id);
+    public ResponseEntity<Flight> PatchFlight(@PathVariable String id, @RequestBody Flight flight) {
+        Optional<Flight> flightData = flightsRepository.findById(id);
         flightData.ifPresent(flg -> {
             Optional.ofNullable(flight.getAirlineLogo()).ifPresent(flg::setAirlineLogo);
             Optional.ofNullable(flight.getAirlineName()).ifPresent(flg::setAirlineName);
@@ -106,7 +111,7 @@ public class FlightsController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFlight(@PathVariable String id) {
-        Optional<Flights> flightData = flightsRepository.findById(id);
+        Optional<Flight> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {
             try {
                 flightsRepository.deleteById(id);
@@ -120,7 +125,22 @@ public class FlightsController {
     }
 
 
+    @PostMapping("/favoriteFlight/{flightId}/{userId}")
+    public ResponseEntity<String> favoriteFlight(@PathVariable String flightId, @PathVariable String userId) {
+        Optional<Flight> flightData = flightsRepository.findById(flightId);
+        Optional<User> userData = userRepository.findById(userId);
 
+        if (flightData.isPresent() && userData.isPresent()) {
+            Flight flight = flightData.get();
+            User user = userData.get();
+            user.getFavoritesListFlights().add(flight);
+            userRepository.save(user);
+            return ResponseEntity.ok("Flight added to favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight or user not found");
+        }
+
+    }
 
 
 

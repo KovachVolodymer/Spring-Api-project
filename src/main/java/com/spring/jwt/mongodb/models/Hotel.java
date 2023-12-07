@@ -1,19 +1,17 @@
 package com.spring.jwt.mongodb.models;
 
+import com.spring.jwt.mongodb.models.subModels.Reviews;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @Document(collection = "hotels")
-public class Hotels {
+public class Hotel {
 
     @Id
     private String id;

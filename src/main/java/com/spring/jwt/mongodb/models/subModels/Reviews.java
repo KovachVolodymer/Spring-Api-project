@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.models;
+package com.spring.jwt.mongodb.models.subModels;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Id;
 public class Reviews {
     @Id
     private String id;
+
     private String photo;
     private String name;
     private String rating;

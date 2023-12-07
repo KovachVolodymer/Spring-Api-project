@@ -1,5 +1,6 @@
 package com.spring.jwt.mongodb.models;
 
+import com.spring.jwt.mongodb.models.subModels.ERole;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
