@@ -142,6 +142,23 @@ public class FlightsController {
 
     }
 
+    @DeleteMapping("/favoriteFlight/{flightId}/{userId}")
+    public ResponseEntity<String> deleteFavoriteFlight(@PathVariable String flightId, @PathVariable String userId) {
+        Optional<Flight> flightData = flightsRepository.findById(flightId);
+        Optional<User> userData = userRepository.findById(userId);
+
+        if (flightData.isPresent() && userData.isPresent()) {
+            Flight flight = flightData.get();
+            User user = userData.get();
+            user.getFavoritesListFlights().remove(flight);
+            userRepository.save(user);
+            return ResponseEntity.ok("Flight removed from favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight or user not found");
+        }
+
+    }
+
 
 
 

@@ -28,6 +28,11 @@ public class HotelsController {
     @GetMapping("")
     public ResponseEntity<List<Map<String, Object>>> hotels() {
         List<Hotel> hotelsList = hotelsRepository.findAll();
+
+        Set<String> uniqueAdvantages = hotelsList.stream()
+                .flatMap(hotel -> hotel.getAdvantages().stream())
+                .collect(Collectors.toSet());
+
         List<Map<String, Object>> hotelMaps = hotelsList.stream()
                 .map(hotel -> {
                     Map<String, Object> hotelMap = new HashMap<>();
@@ -42,7 +47,11 @@ public class HotelsController {
                 })
                 .collect(Collectors.toList());
 
-        return ok(hotelMaps);
+        Map<String, Object> response = new HashMap<>();
+        response.put("uniqueAdvantages", new ArrayList<>(uniqueAdvantages));
+        response.put("hotels", hotelMaps);
+
+        return ok(Collections.singletonList(response));
     }
 
     @GetMapping("/{id}")
@@ -126,7 +135,7 @@ public class HotelsController {
     @PostMapping("/favoriteHotel/{hotelId}/{userId}")
     public ResponseEntity<String> favoriteHotel(@PathVariable String hotelId, @PathVariable String userId) {
         Optional<Hotel> hotelData = hotelsRepository.findById(hotelId);
-        Optional<com.spring.jwt.mongodb.models.User> userData = userRepository.findById(userId);
+        Optional<User> userData = userRepository.findById(userId);
 
         if (hotelData.isPresent() && userData.isPresent()) {
             Hotel hotel = hotelData.get();
@@ -139,5 +148,24 @@ public class HotelsController {
         }
 
     }
+
+    @DeleteMapping("/favoriteHotel/{hotelId}/{userId}")
+    public ResponseEntity<String> deleteFavoriteHotel(@PathVariable String hotelId, @PathVariable String userId) {
+        Optional<Hotel> hotelData = hotelsRepository.findById(hotelId);
+        Optional<User> userData = userRepository.findById(userId);
+
+        if (hotelData.isPresent() && userData.isPresent()) {
+            Hotel hotel = hotelData.get();
+            User user = userData.get();
+            user.getFavoritesListHotels().remove(hotel);
+            userRepository.save(user);
+            return ResponseEntity.ok("Hotel removed from favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel or user not found");
+        }
+
+    }
+
+
 
 }

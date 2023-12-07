@@ -18,8 +18,7 @@ public class Flight {
     @Id
     private String id;
 
-    @Indexed(unique = true)
-    private Integer flightId;
+
     private Integer price;
     private Integer rating;
 
