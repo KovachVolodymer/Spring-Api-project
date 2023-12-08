@@ -32,13 +32,19 @@ public class FlightsController {
         List<Map<String, Object>> flightMaps = flightsList.stream()
                 .map(flight -> {
                     Map<String, Object> flightMap = new HashMap<>();
-                    flightMap.put("flightId", flight.getId());
+                    flightMap.put("id", flight.getId());
+                    flightMap.put("alt", flight.getAlt());
                     flightMap.put("photo", flight.getPhoto());
                     flightMap.put("airlineName", flight.getAirlineName());
                     flightMap.put("rating", flight.getRating());
                     flightMap.put("price", flight.getPrice());
                     flightMap.put("location", flight.getGeolocation());
-                    flightMap.put("reviews", flight.getReviewsList());
+                    flightMap.put("duration", flight.getDuration());
+                    flightMap.put("abbreviation", flight.getAbbreviation());
+                    flightMap.put("slug", flight.getSlug());
+                    flightMap.put("fromArrive", flight.getFromArrive());
+                    flightMap.put("toArrive", flight.getToArrive());
+
                     return flightMap;
                 })
                 .collect(Collectors.toList());
@@ -125,39 +131,7 @@ public class FlightsController {
     }
 
 
-    @PostMapping("/favoriteFlight/{flightId}/{userId}")
-    public ResponseEntity<String> favoriteFlight(@PathVariable String flightId, @PathVariable String userId) {
-        Optional<Flight> flightData = flightsRepository.findById(flightId);
-        Optional<User> userData = userRepository.findById(userId);
 
-        if (flightData.isPresent() && userData.isPresent()) {
-            Flight flight = flightData.get();
-            User user = userData.get();
-            user.getFavoritesListFlights().add(flight);
-            userRepository.save(user);
-            return ResponseEntity.ok("Flight added to favorites successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight or user not found");
-        }
-
-    }
-
-    @DeleteMapping("/favoriteFlight/{flightId}/{userId}")
-    public ResponseEntity<String> deleteFavoriteFlight(@PathVariable String flightId, @PathVariable String userId) {
-        Optional<Flight> flightData = flightsRepository.findById(flightId);
-        Optional<User> userData = userRepository.findById(userId);
-
-        if (flightData.isPresent() && userData.isPresent()) {
-            Flight flight = flightData.get();
-            User user = userData.get();
-            user.getFavoritesListFlights().remove(flight);
-            userRepository.save(user);
-            return ResponseEntity.ok("Flight removed from favorites successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight or user not found");
-        }
-
-    }
 
 
 

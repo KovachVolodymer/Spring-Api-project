@@ -40,10 +40,10 @@ public class UserController {
             response.put("avatar", userData.getAvatar());
             response.put("phone", userData.getPhone());
             response.put("address", userData.getAddress());
-            response.put("dataBirth", userData.getDataBirth());
-            response.put("recentSearches", userData.getRecentSearches());
-            response.put("favoritesListHotels", userData.getFavoritesListHotels());
-            response.put("favoritesListFlights", userData.getFavoritesListFlights());
+            response.put("dataBirth", userData.getBirthday());
+            response.put("recentSearch", userData.getRecentSearch());
+            response.put("favoritesListHotels", userData.getFavoritesHotels());
+            response.put("favoritesListFlights", userData.getFavoritesFlights());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
@@ -60,7 +60,7 @@ public class UserController {
             Optional.ofNullable(user.getUsername()).ifPresent(u::setUsername);
             Optional.ofNullable(user.getAddress()).ifPresent(u::setAddress);
             Optional.ofNullable(user.getPhone()).ifPresent(u::setPhone);
-            Optional.ofNullable(user.getDataBirth()).ifPresent(u::setDataBirth);
+            Optional.ofNullable(user.getBirthday()).ifPresent(u::setBirthday);
             Optional.ofNullable(user.getAvatar()).ifPresent(u::setAvatar);
             Optional.ofNullable(user.getPassword()).ifPresent(p -> u.setPassword(encoder.encode(p)));
             if (user.getUsername() == null) {
@@ -71,21 +71,84 @@ public class UserController {
             } else {
                 u.setUsername(user.getUsername());
             }
-            if (user.getNewEmail() == null) {
-                u.setEmail(u.getEmail());
-            } else if (userRepository.existsByEmail(user.getNewEmail())) {
-                u.setEmail(u.getEmail());
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email name already exists");
-            } else {
-                u.setEmail(user.getNewEmail());
-            }
-
-
             userRepository.save(u);
             return ResponseEntity.ok("User updated successfully");
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
         }
+    }
+
+    @PostMapping("/favoriteFlight")
+    public ResponseEntity<String> favoriteFlight(@RequestBody Map<String, String> body) {
+        String flightId = body.get("flightId");
+        String userId = body.get("userId");
+        Optional<Flight> flightData = flightsRepository.findById(flightId);
+        Optional<User> userData = userRepository.findById(userId);
+
+        if (flightData.isPresent() && userData.isPresent()) {
+            Flight flight = flightData.get();
+            User user = userData.get();
+            user.getFavoritesFlights().add(flight);
+            userRepository.save(user);
+            return ResponseEntity.ok("Flight added to favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight or user not found");
+        }
+
+    }
+
+    @DeleteMapping("/{userId}/favoriteFlight/{flightId}")
+    public ResponseEntity<String> deleteFavoriteFlight(@PathVariable String flightId, @PathVariable String userId) {
+        Optional<Flight> flightData = flightsRepository.findById(flightId);
+        Optional<User> userData = userRepository.findById(userId);
+
+        if (flightData.isPresent() && userData.isPresent()) {
+            Flight flight = flightData.get();
+            User user = userData.get();
+            user.getFavoritesFlights().remove(flight);
+            userRepository.save(user);
+            return ResponseEntity.ok("Flight removed from favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight or user not found");
+        }
+
+    }
+
+    @PostMapping("/favoriteHotel")
+    public ResponseEntity<String> favoriteHotel(@RequestBody Map<String, String> body) {
+        String hotelId = body.get("hotelId");
+        String userId = body.get("userId");
+
+        Optional<Hotel> hotelData = hotelsRepository.findById(hotelId);
+        Optional<User> userData = userRepository.findById(userId);
+
+        if (hotelData.isPresent() && userData.isPresent()) {
+            Hotel hotel = hotelData.get();
+            User user = userData.get();
+            user.getFavoritesHotels().add(hotel);
+            userRepository.save(user);
+            return ResponseEntity.ok("Hotel added to favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel or user not found");
+        }
+
+    }
+
+    @DeleteMapping("/{userId}/favoriteHotel/{hotelId}")
+    public ResponseEntity<String> deleteFavoriteHotel(@PathVariable String hotelId, @PathVariable String userId) {
+        Optional<Hotel> hotelData = hotelsRepository.findById(hotelId);
+        Optional<User> userData = userRepository.findById(userId);
+
+        if (hotelData.isPresent() && userData.isPresent()) {
+            Hotel hotel = hotelData.get();
+            User user = userData.get();
+            user.getFavoritesHotels().remove(hotel);
+            userRepository.save(user);
+            return ResponseEntity.ok("Hotel removed from favorites successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel or user not found");
+        }
+
     }
 
 

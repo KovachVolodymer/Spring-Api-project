@@ -26,7 +26,7 @@ public class Hotel {
     private String photo;
 
     private List<String> advantages;
-    private List<Reviews> reviewsList;
+    private List<Reviews> reviews;
 
 
 

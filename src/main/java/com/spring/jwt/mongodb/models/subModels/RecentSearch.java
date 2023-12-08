@@ -11,11 +11,15 @@ import org.springframework.data.annotation.Id;
 public class RecentSearch {
 
     @Id
-    private Integer id;
+    private String id;
 
-    private String city;
+    private String userId;
+    private String hotelId;
 
     private Integer places;
 
+    private String alt;
+    private String city;
+    private String photo;
 
 }

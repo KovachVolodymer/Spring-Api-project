@@ -66,9 +66,9 @@ public class AuthController {
         responseMap.put("username", userDetails.getUsername());
         responseMap.put("email", userDetails.getEmail());
         responseMap.put("avatar", user.getAvatar());
-        responseMap.put("favoritesHotel", user.getFavoritesListHotels());
-        responseMap.put("favoritesFlight", user.getFavoritesListFlights());
-        responseMap.put("recentSearches", user.getRecentSearches());
+        responseMap.put("favoritesHotel", user.getFavoritesHotels());
+        responseMap.put("favoritesFlight", user.getFavoritesFlights());
+        responseMap.put("recentSearches", user.getRecentSearch());
         return ResponseEntity.ok(responseMap);
     }
 

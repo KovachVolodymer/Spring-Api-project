@@ -40,6 +40,6 @@ public class Flight {
     private String partnerLogo;
 
     private List<String> advantages;
-    private List<Reviews> reviewsList;
+    private List<Reviews> reviews;
 
 }

@@ -42,15 +42,13 @@ public class User {
 
   private String address;
 
-  private String dataBirth;
+  private String birthday;
 
-  private String newEmail;
+  private List<Hotel> favoritesHotels = new ArrayList<>();
 
-  private List<Hotel> favoritesListHotels = new ArrayList<>();
+  private List<Flight> favoritesFlights = new ArrayList<>();
 
-  private List<Flight> favoritesListFlights = new ArrayList<>();
-
-  private List<RecentSearch> recentSearches=new ArrayList<>();
+  private List<RecentSearch> recentSearch=new ArrayList<>();
 
 
   public User(String username, String email, String password) {

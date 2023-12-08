@@ -1,7 +1,9 @@
 package com.spring.jwt.mongodb.controllers.subControllers;
 
+import com.spring.jwt.mongodb.models.Hotel;
 import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.models.subModels.RecentSearch;
+import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +20,19 @@ public class RecentSearchController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    HotelsRepository hotelsRepository;
+
     @PostMapping("/recentSearch{id}")
-    public ResponseEntity<String> recentSearch(@PathVariable String id, @RequestBody RecentSearch recentSearch){
-        Optional<User> user=userRepository.findById(id);
+    public ResponseEntity<String> recentSearch(@RequestBody RecentSearch recentSearch){
+        Optional<User> user=userRepository.findById(recentSearch.getUserId());
+        Optional<Hotel> hotel=hotelsRepository.findById(recentSearch.getHotelId());
         if(user.isPresent())
         {
             User userData=user.get();
-            List<RecentSearch> recentSearchList=userData.getRecentSearches();
+            List<RecentSearch> recentSearchList=userData.getRecentSearch();
             recentSearchList.add(recentSearch);
-            userData.setRecentSearches(recentSearchList);
+            userData.setRecentSearch(recentSearchList);
             userRepository.save(userData);
             return ResponseEntity.ok("Recent search added successfully");
         }
@@ -42,7 +48,7 @@ public class RecentSearchController {
         if(user.isPresent())
         {
             User userData=user.get();
-            List<RecentSearch> recentSearchList=userData.getRecentSearches();
+            List<RecentSearch> recentSearchList=userData.getRecentSearch();
             return ResponseEntity.ok(recentSearchList);
         }
         else
@@ -57,9 +63,9 @@ public class RecentSearchController {
         if(user.isPresent())
         {
             User userData=user.get();
-            List<RecentSearch> recentSearchList=userData.getRecentSearches();
+            List<RecentSearch> recentSearchList=userData.getRecentSearch();
             recentSearchList.removeIf(recentSearch1 -> recentSearch1.getId().equals(recentSearch.getId()));
-            userData.setRecentSearches(recentSearchList);
+            userData.setRecentSearch(recentSearchList);
             userRepository.save(userData);
             return ResponseEntity.ok("Recent search deleted successfully");
         }

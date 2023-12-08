@@ -16,4 +16,5 @@ public class Reviews {
     private String photo;
     private String name;
     private String rating;
+    private String comment;
 }

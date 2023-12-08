@@ -29,29 +29,26 @@ public class HotelsController {
     public ResponseEntity<List<Map<String, Object>>> hotels() {
         List<Hotel> hotelsList = hotelsRepository.findAll();
 
-        Set<String> uniqueAdvantages = hotelsList.stream()
-                .flatMap(hotel -> hotel.getAdvantages().stream())
-                .collect(Collectors.toSet());
-
         List<Map<String, Object>> hotelMaps = hotelsList.stream()
                 .map(hotel -> {
                     Map<String, Object> hotelMap = new HashMap<>();
-                    hotelMap.put("hotelId", hotel.getId());
+                    hotelMap.put("id", hotel.getId());
                     hotelMap.put("photo", hotel.getPhoto());
                     hotelMap.put("name", hotel.getName());
                     hotelMap.put("rating", hotel.getStarRating());
                     hotelMap.put("price", hotel.getPrice());
                     hotelMap.put("location", hotel.getLocation());
-                    hotelMap.put("reviews", hotel.getReviewsList());
+                    hotelMap.put("advantages", hotel.getAdvantages());
+                    hotelMap.put("slug", hotel.getSlug());
                     return hotelMap;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("uniqueAdvantages", new ArrayList<>(uniqueAdvantages));
-        response.put("hotels", hotelMaps);
+        Set<String> uniqueAdvantages = hotelMaps.stream()
+                .flatMap(hotelMap -> ((List<String>) hotelMap.get("advantages")).stream())
+                .collect(Collectors.toSet());
 
-        return ok(Collections.singletonList(response));
+        return ok(Collections.singletonList((Map<String, Object>) uniqueAdvantages));
     }
 
     @GetMapping("/{id}")
@@ -91,7 +88,7 @@ public class HotelsController {
             hotelData.setDescription(hotel.getDescription());
             hotelData.setPhoto(hotel.getPhoto());
             hotelData.setAdvantages(hotel.getAdvantages());
-            hotelData.setReviewsList(hotel.getReviewsList());
+            hotelData.setReviews(hotel.getReviews());
             Hotel updatedHotel = hotelsRepository.save(hotelData);
             return ResponseEntity.ok(updatedHotel);
         } else {
@@ -132,39 +129,7 @@ public class HotelsController {
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @PostMapping("/favoriteHotel/{hotelId}/{userId}")
-    public ResponseEntity<String> favoriteHotel(@PathVariable String hotelId, @PathVariable String userId) {
-        Optional<Hotel> hotelData = hotelsRepository.findById(hotelId);
-        Optional<User> userData = userRepository.findById(userId);
 
-        if (hotelData.isPresent() && userData.isPresent()) {
-            Hotel hotel = hotelData.get();
-            User user = userData.get();
-            user.getFavoritesListHotels().add(hotel);
-            userRepository.save(user);
-            return ResponseEntity.ok("Hotel added to favorites successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel or user not found");
-        }
-
-    }
-
-    @DeleteMapping("/favoriteHotel/{hotelId}/{userId}")
-    public ResponseEntity<String> deleteFavoriteHotel(@PathVariable String hotelId, @PathVariable String userId) {
-        Optional<Hotel> hotelData = hotelsRepository.findById(hotelId);
-        Optional<User> userData = userRepository.findById(userId);
-
-        if (hotelData.isPresent() && userData.isPresent()) {
-            Hotel hotel = hotelData.get();
-            User user = userData.get();
-            user.getFavoritesListHotels().remove(hotel);
-            userRepository.save(user);
-            return ResponseEntity.ok("Hotel removed from favorites successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel or user not found");
-        }
-
-    }
 
 
 
