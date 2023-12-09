@@ -29,6 +29,10 @@ public class HotelsController {
     public ResponseEntity<List<Map<String, Object>>> hotels() {
         List<Hotel> hotelsList = hotelsRepository.findAll();
 
+        Set<String> uniqueAdvantages = hotelsList.stream()
+                .flatMap(hotel -> hotel.getAdvantages().stream())
+                .collect(Collectors.toSet());
+
         List<Map<String, Object>> hotelMaps = hotelsList.stream()
                 .map(hotel -> {
                     Map<String, Object> hotelMap = new HashMap<>();
@@ -42,13 +46,13 @@ public class HotelsController {
                     hotelMap.put("slug", hotel.getSlug());
                     return hotelMap;
                 })
-                .toList();
+                .collect(Collectors.toList());
 
-        Set<String> uniqueAdvantages = hotelMaps.stream()
-                .flatMap(hotelMap -> ((List<String>) hotelMap.get("advantages")).stream())
-                .collect(Collectors.toSet());
+        Map<String, Object> response = new HashMap<>();
+        response.put("uniqueAdvantages", new ArrayList<>(uniqueAdvantages));
+        response.put("hotels", hotelMaps);
 
-        return ok(Collections.singletonList((Map<String, Object>) uniqueAdvantages));
+        return ok(Collections.singletonList(response));
     }
 
     @GetMapping("/{id}")

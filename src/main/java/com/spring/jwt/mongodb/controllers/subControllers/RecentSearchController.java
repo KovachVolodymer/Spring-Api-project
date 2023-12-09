@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/user")
 public class RecentSearchController {
 
     @Autowired
@@ -23,22 +24,27 @@ public class RecentSearchController {
     @Autowired
     HotelsRepository hotelsRepository;
 
-    @PostMapping("/recentSearch{id}")
+    @PostMapping("/recentSearch")
     public ResponseEntity<String> recentSearch(@RequestBody RecentSearch recentSearch){
         Optional<User> user=userRepository.findById(recentSearch.getUserId());
         Optional<Hotel> hotel=hotelsRepository.findById(recentSearch.getHotelId());
-        if(user.isPresent())
+        if(user.isPresent() && hotel.isPresent())
         {
             User userData=user.get();
+            Hotel hotelData=hotel.get();
+            recentSearch.setAlt(hotelData.getAlt());
+            recentSearch.setPhoto(hotelData.getPhoto());
+            recentSearch.setCity(hotelData.getLocation());
+
             List<RecentSearch> recentSearchList=userData.getRecentSearch();
             recentSearchList.add(recentSearch);
             userData.setRecentSearch(recentSearchList);
             userRepository.save(userData);
-            return ResponseEntity.ok("Recent search added successfully");
+            return ResponseEntity.ok("Recent search added");
         }
         else
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found or hotel not found");
         }
     }
 
@@ -57,21 +63,5 @@ public class RecentSearchController {
         }
     }
 
-    @DeleteMapping("/recentSearch{id}")
-    public ResponseEntity<String> deleteRecentSearch(@PathVariable String id,@RequestBody RecentSearch recentSearch){
-        Optional<User> user=userRepository.findById(id);
-        if(user.isPresent())
-        {
-            User userData=user.get();
-            List<RecentSearch> recentSearchList=userData.getRecentSearch();
-            recentSearchList.removeIf(recentSearch1 -> recentSearch1.getId().equals(recentSearch.getId()));
-            userData.setRecentSearch(recentSearchList);
-            userRepository.save(userData);
-            return ResponseEntity.ok("Recent search deleted successfully");
-        }
-        else
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found");
-        }
-    }
+
 }

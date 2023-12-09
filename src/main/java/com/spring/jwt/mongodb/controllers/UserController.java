@@ -51,7 +51,7 @@ public class UserController {
 
     }
 
-    @PatchMapping("")
+    @PatchMapping
     public ResponseEntity<String> updateUser(@RequestBody User user) {
         Optional<User> userOptional = userRepository.findById(user.getId());
 
