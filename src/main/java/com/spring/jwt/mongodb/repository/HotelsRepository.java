@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface HotelsRepository extends MongoRepository<Hotel, String> {
 
-    List<Hotel> findByPriceLessThanEqual(double maxPrice);
 
-    List<Hotel> findByPriceGreaterThanEqual(double minPrice);
+    List<Hotel> findByPriceGreaterThanEqual(Integer minPrice);
+
+    @Query("{ 'price' : { $gte : ?0, $lte : ?1 } }")
+    List<Hotel> findByPriceBetween(Integer minPrice, Integer maxPrice);
 }
