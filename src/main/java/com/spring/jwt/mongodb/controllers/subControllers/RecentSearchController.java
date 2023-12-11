@@ -24,41 +24,35 @@ public class RecentSearchController {
     @Autowired
     HotelsRepository hotelsRepository;
 
-    @PostMapping("/recentSearch")
-    public ResponseEntity<String> recentSearch(@RequestBody RecentSearch recentSearch){
-        Optional<User> user=userRepository.findById(recentSearch.getUserId());
-        Optional<Hotel> hotel=hotelsRepository.findById(recentSearch.getHotelId());
-        if(user.isPresent() && hotel.isPresent())
-        {
-            User userData=user.get();
-            Hotel hotelData=hotel.get();
-            recentSearch.setAlt(hotelData.getAlt());
-            recentSearch.setPhoto(hotelData.getPhoto());
-            recentSearch.setCity(hotelData.getLocation());
+        @PostMapping("/recentSearch")
+        public ResponseEntity<String> recentSearch(@RequestBody RecentSearch recentSearch) {
+            Optional<User> user = userRepository.findById(recentSearch.getUserId());
+            Optional<Hotel> hotel = hotelsRepository.findById(recentSearch.getHotelId());
+            if (user.isPresent() && hotel.isPresent()) {
+                User userData = user.get();
+                Hotel hotelData = hotel.get();
 
-            List<RecentSearch> recentSearchList=userData.getRecentSearch();
-            recentSearchList.add(recentSearch);
-            userData.setRecentSearch(recentSearchList);
-            userRepository.save(userData);
-            return ResponseEntity.ok("Recent search added");
-        }
-        else
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found or hotel not found");
-        }
-    }
+                recentSearch.setAlt(hotelData.getAlt());
+                recentSearch.setPhoto(hotelData.getPhoto());
+                recentSearch.setCity(hotelData.getLocation());
 
-    @GetMapping("/recentSearch/{id}")
-    public ResponseEntity<List<RecentSearch>> getRecentSearch(@PathVariable String id){
-        Optional<User> user=userRepository.findById(id);
-        if(user.isPresent())
-        {
-            User userData=user.get();
-            List<RecentSearch> recentSearchList=userData.getRecentSearch();
+
+                userRepository.save(userData);
+
+                return ResponseEntity.ok("Recent search added");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found or hotel not found");
+            }
+        }
+
+    @GetMapping("{id}/recentSearch")
+    public ResponseEntity<List<RecentSearch>> getRecentSearch(@PathVariable String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User userData = user.get();
+            List<RecentSearch> recentSearchList = userData.getRecentSearch();
             return ResponseEntity.ok(recentSearchList);
-        }
-        else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }

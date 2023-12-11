@@ -1,7 +1,6 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Hotel;
-import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,9 @@ public class HotelsController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<Map<String, Object>>> hotels() {
         List<Hotel> hotelsList = hotelsRepository.findAll();
-
-        Set<String> uniqueAdvantages = hotelsList.stream()
-                .flatMap(hotel -> hotel.getAdvantages().stream())
-                .collect(Collectors.toSet());
 
         List<Map<String, Object>> hotelMaps = hotelsList.stream()
                 .map(hotel -> {
@@ -48,11 +43,7 @@ public class HotelsController {
                 })
                 .collect(Collectors.toList());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("uniqueAdvantages", new ArrayList<>(uniqueAdvantages));
-        response.put("hotels", hotelMaps);
-
-        return ok(Collections.singletonList(response));
+        return ok(hotelMaps);
     }
 
     @GetMapping("/{id}")
@@ -62,7 +53,7 @@ public class HotelsController {
         return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @PostMapping("")
+    @PostMapping
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel) {
         if (hotel.getId() != null && hotelsRepository.existsById(hotel.getId())) {
@@ -132,6 +123,23 @@ public class HotelsController {
         });
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
+
+    @GetMapping("/uniqueAdvantages")
+    public ResponseEntity<List<Object>> getUniqueAdvantages() {
+        List<Hotel> hotelsList = hotelsRepository.findAll();
+        List<String> advantagesList = new ArrayList<>();
+        for (Hotel hotel : hotelsList) {
+            for (String advantage : hotel.getAdvantages()) {
+                if (!advantagesList.contains(advantage)) {
+                    advantagesList.add(advantage);
+
+
+                }
+            }
+        }
+        return ok(Collections.singletonList(advantagesList));
+    }
+
 
 
 

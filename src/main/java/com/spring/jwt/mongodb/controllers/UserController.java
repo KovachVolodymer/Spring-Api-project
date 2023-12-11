@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.*;
+import com.spring.jwt.mongodb.models.subModels.RecentSearch;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
@@ -150,6 +151,7 @@ public class UserController {
         }
 
     }
+
 
 
 
