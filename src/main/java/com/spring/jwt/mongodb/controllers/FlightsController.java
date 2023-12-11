@@ -23,9 +23,6 @@ public class FlightsController {
     @Autowired
     private FlightsRepository flightsRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @GetMapping("")
     public ResponseEntity<List<Map<String, Object>>> flights() {
         List<Flight> flightsList = flightsRepository.findAll();
@@ -109,6 +106,12 @@ public class FlightsController {
             Optional.ofNullable(flight.getAbbreviation()).ifPresent(flg::setAbbreviation);
             Optional.ofNullable(flight.getRating()).ifPresent(flg::setRating);
             Optional.ofNullable(flight.getAdvantages()).ifPresent(flg::setAdvantages);
+            Optional.ofNullable(flight.getPhoto()).ifPresent(flg::setPhoto);
+            Optional.ofNullable(flight.getPartnerName()).ifPresent(flg::setPartnerName);
+            Optional.ofNullable(flight.getFromArrive()).ifPresent(flg::setFromArrive);
+            Optional.ofNullable(flight.getToArrive()).ifPresent(flg::setToArrive);
+            Optional.ofNullable(flight.getArrivalTime()).ifPresent(flg::setArrivalTime);
+            Optional.ofNullable(flight.getDepartureTime()).ifPresent(flg::setDepartureTime);
             flightsRepository.save(flg);
 
         });

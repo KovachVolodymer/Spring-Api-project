@@ -20,7 +20,7 @@ public class Flight {
 
 
     private Integer price;
-    private Integer rating;
+    private Double rating;
 
     private String alt;
     private String geolocation;
@@ -32,8 +32,8 @@ public class Flight {
     private String toArrive;
     private String slug;
 
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
+    private String departureTime;
+    private String arrivalTime;
 
     private String photo;
     private String airlineLogo;
