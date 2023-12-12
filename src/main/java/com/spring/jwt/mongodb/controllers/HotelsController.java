@@ -6,6 +6,7 @@ import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -92,7 +93,7 @@ public class HotelsController {
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteHotel(@PathVariable String id) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         if (hotelData.isPresent()) {
