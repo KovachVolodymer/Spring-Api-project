@@ -125,7 +125,7 @@ public class HotelsController {
     }
 
     @GetMapping("/uniqueAdvantages")
-    public ResponseEntity<List<Object>> getUniqueAdvantages() {
+    public ResponseEntity<Object> getUniqueAdvantages() {
         List<Hotel> hotelsList = hotelsRepository.findAll();
         List<String> advantagesList = new ArrayList<>();
         for (Hotel hotel : hotelsList) {
@@ -137,7 +137,10 @@ public class HotelsController {
                 }
             }
         }
-        return ok(Collections.singletonList(advantagesList));
+        return ok(advantagesList
+                .stream()
+                .sorted()
+                .collect(Collectors.toList()));
     }
 
 

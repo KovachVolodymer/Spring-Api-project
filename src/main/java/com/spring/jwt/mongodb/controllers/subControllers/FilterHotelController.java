@@ -20,18 +20,19 @@ public class FilterHotelController {
     @Autowired
     HotelsRepository hotelsRepository;
 
-    @GetMapping("/price")
-        public ResponseEntity<Object> filterByPrice(@RequestParam (name = "maxPrice" ,defaultValue = "0") Integer maxPrice,
-                                                    @RequestParam (name = "minPrice", defaultValue = "0")  Integer minPrice ) {
+    @GetMapping("/filter")
+        public ResponseEntity<Object> filterByPrice(@RequestParam (name = "maxPrice" ,defaultValue = "500") Integer maxPrice,
+                                                    @RequestParam (name = "minPrice", defaultValue = "0") Integer minPrice,
+                                                    @RequestParam (name = "Rating", defaultValue = "0") Double Rating){
 
-
-        List<Hotel> hotels= Optional.of(maxPrice)
-                .filter(max -> max > 0)
-                .map(max -> hotelsRepository.findByPriceBetween(minPrice, max))
-                .orElseGet(() -> hotelsRepository.findByPriceGreaterThanEqual(minPrice));
+        List<Hotel> hotels =
+                hotelsRepository
+                        .findByPriceBetweenAAndStarRatingGreaterThanEqual
+                                (minPrice, maxPrice, Rating);
 
         return hotels.isEmpty()
                 ? ResponseEntity.badRequest().body("No hotels found")
                 : ResponseEntity.ok(hotels);
     }
+
 }
