@@ -59,6 +59,7 @@ public class FlightsController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flight> addFlight(@RequestBody Flight flight) {
         if (flight.getId() != null && flightsRepository.existsById(flight.getId())) {
             // If a flight with the specified id already exists, return a conflict response
@@ -75,6 +76,7 @@ public class FlightsController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flight> updateFlight(@PathVariable String id, @RequestBody Flight flight) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {
@@ -97,6 +99,7 @@ public class FlightsController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flight> PatchFlight(@PathVariable String id, @RequestBody Flight flight) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         flightData.ifPresent(flg -> {
@@ -137,6 +140,17 @@ public class FlightsController {
         }
     }
 
+    @GetMapping("/uniqueAirlineName")
+    public ResponseEntity<List<String>> getUniqueAirlineName() {
+        List<String> airlineNameList = flightsRepository.findAll().stream()
+                .map(Flight::getAirlineName)
+                .distinct()
+                .toList();
+        return ok(airlineNameList
+                .stream()
+                .sorted()
+                .collect(Collectors.toList()));
+    }
 
 
 

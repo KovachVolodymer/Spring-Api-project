@@ -48,14 +48,13 @@ public class HotelsController {
     }
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> hotelById(@PathVariable String id) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
     @PostMapping
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel) {
         if (hotel.getId() != null && hotelsRepository.existsById(hotel.getId())) {
             // If a hotel with the specified id already exists, return a conflict response
@@ -72,7 +71,7 @@ public class HotelsController {
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> updateHotel(@PathVariable String id, @RequestBody Hotel hotel) {
         Optional<Hotel> existingHotel = hotelsRepository.findById(id);
         if (existingHotel.isPresent()) {
@@ -109,7 +108,7 @@ public class HotelsController {
     }
 
     @PatchMapping("/{id}")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> patchHotel(@PathVariable String id, @RequestBody Hotel hotel) {
 
         Optional<Hotel> optionalHotel = hotelsRepository.findById(id);
