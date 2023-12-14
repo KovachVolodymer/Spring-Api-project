@@ -124,7 +124,7 @@ public class HotelsController {
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
     }
 
-    @GetMapping("/uniqueAdvantages")
+    @GetMapping("/advantages")
     public ResponseEntity<Object> getUniqueAdvantages() {
         List<Hotel> hotelsList = hotelsRepository.findAll();
         List<String> advantagesList = new ArrayList<>();

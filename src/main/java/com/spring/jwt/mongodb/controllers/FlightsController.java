@@ -140,7 +140,7 @@ public class FlightsController {
         }
     }
 
-    @GetMapping("/uniqueAirlineName")
+    @GetMapping("/airlines")
     public ResponseEntity<List<String>> getUniqueAirlineName() {
         List<String> airlineNameList = flightsRepository.findAll().stream()
                 .map(Flight::getAirlineName)

@@ -24,12 +24,13 @@ public class FilterHotelController {
         public ResponseEntity<Object> filterByPrice(@RequestParam (name = "maxPrice" ,defaultValue = "500") Integer maxPrice,
                                                     @RequestParam (name = "minPrice", defaultValue = "0") Integer minPrice,
                                                     @RequestParam (name = "rating", defaultValue = "0") Double rating,
-                                                    @RequestParam (name = "advantages", defaultValue = "") List<String> advantages) {
+                                                    @RequestParam (name = "advantages",defaultValue ="") List<String> advantages) {
 
-        List<Hotel> hotels =
-                hotelsRepository
-                        .filter
-                                (minPrice, maxPrice, rating, advantages);
+
+        List<Hotel> hotels = advantages.isEmpty()
+                ? hotelsRepository.filter(minPrice, maxPrice, rating)
+                : hotelsRepository.filter(minPrice, maxPrice, rating, advantages);
+
 
         return hotels.isEmpty()
                 ? ResponseEntity.badRequest().body("No hotels found")
