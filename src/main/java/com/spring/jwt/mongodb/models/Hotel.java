@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.models;
 
 import com.spring.jwt.mongodb.models.subModels.Reviews;
+import com.spring.jwt.mongodb.models.subModels.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -19,15 +20,19 @@ public class Hotel {
     private String name;
     private String alt;
     private String slug;
-    private Integer price;
     private String location;
-    private Integer starRating;
     private String description;
+
+    private Double rating;
+
+    private Integer price;
+
 
     private String photo;
 
     private List<String> advantages;
     private List<Reviews> reviews;
+    private List<Room> rooms;
 
 
 

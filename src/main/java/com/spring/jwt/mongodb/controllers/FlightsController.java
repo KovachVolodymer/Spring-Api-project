@@ -59,7 +59,7 @@ public class FlightsController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flight> addFlight(@RequestBody Flight flight) {
         if (flight.getId() != null && flightsRepository.existsById(flight.getId())) {
             // If a flight with the specified id already exists, return a conflict response
@@ -99,7 +99,7 @@ public class FlightsController {
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Flight> PatchFlight(@PathVariable String id, @RequestBody Flight flight) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         flightData.ifPresent(flg -> {
@@ -125,7 +125,7 @@ public class FlightsController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteFlight(@PathVariable String id) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {

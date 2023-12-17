@@ -11,7 +11,7 @@ public interface HotelsRepository extends MongoRepository<Hotel, String> {
 
 
     @Query("""
-            { 'price' : { $gte : ?0, $lte : ?1 },
+            {'price' : { $gte : ?0, $lte : ?1 },
             'starRating' : { $gte : ?2 },
             'advantages' : { $all : ?3} }""")
 

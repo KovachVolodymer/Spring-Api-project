@@ -7,7 +7,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.sql.Time;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,6 +22,7 @@ public class Flight {
 
 
     private Integer price;
+    private Integer numberOfSeats;
     private Double rating;
 
     private String alt;
@@ -28,12 +31,14 @@ public class Flight {
     private String abbreviation;
     private String airlineName;
     private String partnerName;
+    private String planeName;
     private String fromArrive;
     private String toArrive;
     private String slug;
 
-    private String departureTime;
-    private String arrivalTime;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
+
 
     private String photo;
     private String airlineLogo;

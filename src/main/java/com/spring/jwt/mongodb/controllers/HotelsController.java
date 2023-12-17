@@ -35,7 +35,7 @@ public class HotelsController {
                     hotelMap.put("id", hotel.getId());
                     hotelMap.put("photo", hotel.getPhoto());
                     hotelMap.put("name", hotel.getName());
-                    hotelMap.put("rating", hotel.getStarRating());
+                    hotelMap.put("rating", hotel.getRating());
                     hotelMap.put("price", hotel.getPrice());
                     hotelMap.put("location", hotel.getLocation());
                     hotelMap.put("advantages", hotel.getAdvantages());
@@ -54,7 +54,7 @@ public class HotelsController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel) {
         if (hotel.getId() != null && hotelsRepository.existsById(hotel.getId())) {
             // If a hotel with the specified id already exists, return a conflict response
@@ -71,7 +71,7 @@ public class HotelsController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> updateHotel(@PathVariable String id, @RequestBody Hotel hotel) {
         Optional<Hotel> existingHotel = hotelsRepository.findById(id);
         if (existingHotel.isPresent()) {
@@ -79,7 +79,7 @@ public class HotelsController {
             hotelData.setName(hotel.getName());
             hotelData.setPrice(hotel.getPrice());
             hotelData.setLocation(hotel.getLocation());
-            hotelData.setStarRating(hotel.getStarRating());
+            hotelData.setRating(hotel.getRating());
             hotelData.setDescription(hotel.getDescription());
             hotelData.setPhoto(hotel.getPhoto());
             hotelData.setAdvantages(hotel.getAdvantages());
@@ -92,7 +92,7 @@ public class HotelsController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteHotel(@PathVariable String id) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         if (hotelData.isPresent()) {
@@ -108,7 +108,7 @@ public class HotelsController {
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> patchHotel(@PathVariable String id, @RequestBody Hotel hotel) {
 
         Optional<Hotel> optionalHotel = hotelsRepository.findById(id);
@@ -117,7 +117,7 @@ public class HotelsController {
             Optional.ofNullable(hotel.getLocation()).ifPresent(h::setLocation);
             Optional.ofNullable(hotel.getPrice()).ifPresent(h::setPrice);
             Optional.ofNullable(hotel.getPhoto()).ifPresent(h::setPhoto);
-            Optional.ofNullable(hotel.getStarRating()).ifPresent(h::setStarRating);
+            Optional.ofNullable(hotel.getRating()).ifPresent(h::setRating);
             Optional.ofNullable(hotel.getAdvantages()).ifPresent(h::setAdvantages);
             hotelsRepository.save(h);
         });
