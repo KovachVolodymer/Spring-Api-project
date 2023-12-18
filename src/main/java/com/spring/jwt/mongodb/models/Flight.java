@@ -36,6 +36,8 @@ public class Flight {
     private String toArrive;
     private String slug;
 
+    private Date departureDate;
+    private Date arrivalDate;
     private LocalTime departureTime;
     private LocalTime arrivalTime;
 

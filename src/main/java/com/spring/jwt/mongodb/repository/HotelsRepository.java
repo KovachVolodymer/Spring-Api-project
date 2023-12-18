@@ -12,13 +12,13 @@ public interface HotelsRepository extends MongoRepository<Hotel, String> {
 
     @Query("""
             {'price' : { $gte : ?0, $lte : ?1 },
-            'starRating' : { $gte : ?2 },
+            'rating' : { $gte : ?2 },
             'advantages' : { $all : ?3} }""")
 
-    List<Hotel> filter(Integer minPrice, Integer maxPrice, Double Rating, List<String> advantages);
+    List<Hotel> filter(Integer minPrice, Integer maxPrice, Double rating, List<String> advantages);
 
     @Query("""
             { 'price' : { $gte : ?0, $lte : ?1 },
-            'starRating' : { $gte : ?2 } }""")
-    List<Hotel> filter(Integer minPrice, Integer maxPrice, Double Rating);
+            'rating' : { $gte : ?2 } }""")
+    List<Hotel> filter(Integer minPrice, Integer maxPrice, Double rating);
 }

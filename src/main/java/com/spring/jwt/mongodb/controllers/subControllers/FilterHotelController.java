@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,12 +26,31 @@ public class FilterHotelController {
         public ResponseEntity<Object> filterByPrice(@RequestParam (name = "maxPrice" ,defaultValue = "500") Integer maxPrice,
                                                     @RequestParam (name = "minPrice", defaultValue = "0") Integer minPrice,
                                                     @RequestParam (name = "rating", defaultValue = "0") Double rating,
-                                                    @RequestParam (name = "advantages",defaultValue ="") List<String> advantages) {
+                                                    @RequestParam (name = "advantages",defaultValue ="") List<String> advantages,
+                                                    @RequestParam (name = "sort",defaultValue ="") String sort) {
+
 
 
         List<Hotel> hotels = advantages.isEmpty()
                 ? hotelsRepository.filter(minPrice, maxPrice, rating)
                 : hotelsRepository.filter(minPrice, maxPrice, rating, advantages);
+
+        switch (sort) {
+            case "maxPrice":
+                hotels.sort((Comparator.comparing(Hotel::getPrice)).reversed());
+                break;
+            case "minPrice":
+                hotels.sort(Comparator.comparing(Hotel::getPrice));
+                break;
+            case "rating":
+                hotels.sort((h1, h2) -> h2.getRating().compareTo(h1.getRating()));
+                break;
+            case "advantages":
+                hotels.sort((h1, h2) -> h2.getAdvantages().size() - h1.getAdvantages().size());
+                break;
+            default:
+                break;
+        }
 
 
         return hotels.isEmpty()
