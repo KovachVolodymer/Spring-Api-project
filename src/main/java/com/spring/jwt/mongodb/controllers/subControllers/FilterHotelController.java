@@ -35,22 +35,22 @@ public class FilterHotelController {
                 ? hotelsRepository.filter(minPrice, maxPrice, rating)
                 : hotelsRepository.filter(minPrice, maxPrice, rating, advantages);
 
-        switch (sort) {
-            case "maxPrice":
-                hotels.sort((Comparator.comparing(Hotel::getPrice)).reversed());
-                break;
-            case "minPrice":
-                hotels.sort(Comparator.comparing(Hotel::getPrice));
-                break;
-            case "rating":
-                hotels.sort((h1, h2) -> h2.getRating().compareTo(h1.getRating()));
-                break;
-            case "advantages":
-                hotels.sort((h1, h2) -> h2.getAdvantages().size() - h1.getAdvantages().size());
-                break;
-            default:
-                break;
-        }
+//        switch (sort) {
+//            case "maxPrice":
+//                hotels.sort((Comparator.comparing(Hotel::getPrice)).reversed());
+//                break;
+//            case "minPrice":
+//                hotels.sort(Comparator.comparing(Hotel::getPrice));
+//                break;
+//            case "rating":
+//                hotels.sort((h1, h2) -> h2.getRating().compareTo(h1.getRating()));
+//                break;
+//            case "advantages":
+//                hotels.sort((h1, h2) -> h2.getAdvantages().size() - h1.getAdvantages().size());
+//                break;
+//            default:
+//                break;
+//        }
 
 
         return hotels.isEmpty()

@@ -48,6 +48,7 @@ public class HotelsController {
     }
 
     @GetMapping("/{id}")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> hotelById(@PathVariable String id) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());

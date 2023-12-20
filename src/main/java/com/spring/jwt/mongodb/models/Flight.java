@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +24,7 @@ public class Flight {
 
 
     private Integer price;
-    private Integer numberOfSeats;
+    private Integer places;
     private Double rating;
 
     private String alt;
@@ -36,11 +38,9 @@ public class Flight {
     private String toArrive;
     private String slug;
 
-    private Date departureDate;
-    private Date arrivalDate;
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
 
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
 
     private String photo;
     private String airlineLogo;

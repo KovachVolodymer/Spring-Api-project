@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
@@ -30,24 +32,27 @@ public class FilterFlightController {
             @RequestParam(name = "minPrice", defaultValue = "0") Integer minPrice,
             @RequestParam(name = "airLine", defaultValue = "") String airLine,
             @RequestParam(name = "rating", defaultValue = "0.0") Double rating,
-            @RequestParam(name = "sort", defaultValue = "") String sort) {
+            @RequestParam(name = "sort", defaultValue = "") String sort,
+            @RequestParam(name = "departureTime", defaultValue = "2024-01-20T00:00:00") String departureTime){
 
-
-        List<Flight> flights = flightsRepository.filter(minPrice, maxPrice, airLine, rating);
+        List<Flight> flights = flightsRepository.filter(minPrice, maxPrice, airLine, rating, LocalDateTime.parse(departureTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         switch (sort)
         {
-            case "maxPrice":
-                flights.sort((f1, f2) -> f2.getPrice().compareTo(f1.getPrice()));
-                break;
-            case "minPrice":
+            case "Cheapest":
                 flights.sort(Comparator.comparing(Flight::getPrice));
                 break;
-            case "rating":
-                flights.sort((f1, f2) -> f2.getRating().compareTo(f1.getRating()));
+            case "Best":
+                flights.sort((f1, f2) -> {
+                    int result = f2.getRating().compareTo(f1.getRating());
+                    if (result == 0) {
+                        result = f1.getPrice().compareTo(f2.getPrice());
+                    }
+                    return result;
+                });
                 break;
-            case "airLine":
-                flights.sort((f1, f2) -> f2.getAirlineName().compareTo(f1.getAirlineName()));
+            case "Quickest":
+                flights.sort((f1, f2) -> f1.getDuration().compareTo(f2.getDuration()));
                 break;
             default:
                 break;
@@ -57,5 +62,6 @@ public class FilterFlightController {
                 ? ResponseEntity.badRequest().body("No flights found")
                 : ResponseEntity.ok(flights);
     }
+
 
 }
