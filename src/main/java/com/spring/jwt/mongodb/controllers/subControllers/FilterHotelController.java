@@ -23,17 +23,19 @@ public class FilterHotelController {
     HotelsRepository hotelsRepository;
 
     @GetMapping("/filter")
-        public ResponseEntity<Object> filterByPrice(@RequestParam (name = "maxPrice" ,defaultValue = "500") Integer maxPrice,
-                                                    @RequestParam (name = "minPrice", defaultValue = "0") Integer minPrice,
-                                                    @RequestParam (name = "rating", defaultValue = "0") Double rating,
+        public ResponseEntity<Object> filterByPrice(@RequestParam (name = "maxPrice" ,defaultValue = "500") String maxPrice,
+                                                    @RequestParam (name = "minPrice", defaultValue = "0") String minPrice,
+                                                    @RequestParam (name = "rating", defaultValue = "0") String rating,
                                                     @RequestParam (name = "advantages",defaultValue ="") List<String> advantages,
                                                     @RequestParam (name = "sort",defaultValue ="") String sort) {
 
-
+        int minPriceInt = Integer.parseInt(minPrice);
+        int maxPriceInt = Integer.parseInt(maxPrice);
+        double ratingDouble = Double.parseDouble(rating);
 
         List<Hotel> hotels = advantages.isEmpty()
-                ? hotelsRepository.filter(minPrice, maxPrice, rating)
-                : hotelsRepository.filter(minPrice, maxPrice, rating, advantages);
+                ? hotelsRepository.filter(minPriceInt, maxPriceInt, ratingDouble)
+                : hotelsRepository.filter(minPriceInt, maxPriceInt, ratingDouble, advantages);
 
 //        switch (sort) {
 //            case "maxPrice":

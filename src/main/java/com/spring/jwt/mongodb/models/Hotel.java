@@ -34,6 +34,4 @@ public class Hotel {
     private List<Reviews> reviews;
     private List<Room> rooms;
 
-
-
 }

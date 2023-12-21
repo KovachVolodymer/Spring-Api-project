@@ -100,7 +100,7 @@ public class FlightsController {
 
     @PatchMapping("/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Flight> PatchFlight(@PathVariable String id, @RequestBody Flight flight) {
+    public ResponseEntity<Flight> patchFlight(@PathVariable String id, @RequestBody Flight flight) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         flightData.ifPresent(flg -> {
             Optional.ofNullable(flight.getAirlineLogo()).ifPresent(flg::setAirlineLogo);
