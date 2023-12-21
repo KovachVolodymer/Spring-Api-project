@@ -42,6 +42,7 @@ public class FlightsController {
                     flightMap.put("slug", flight.getSlug());
                     flightMap.put("fromArrive", flight.getFromArrive());
                     flightMap.put("toArrive", flight.getToArrive());
+                    flightMap.put("airlineLogo", flight.getAirlineLogo());
                     flightMap.put("departureTime", flight.getDepartureTime());
                     flightMap.put("arrivalTime", flight.getArrivalTime());
 
