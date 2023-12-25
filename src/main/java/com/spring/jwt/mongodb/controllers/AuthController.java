@@ -128,6 +128,27 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(signUpRequest.getEmail(), signUpRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String message = "User registered successfully!";
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("message", message);
+        responseMap.put("token", jwt);
+        responseMap.put("id", userDetails.getId());
+        responseMap.put("username", userDetails.getUsername());
+        responseMap.put("email", userDetails.getEmail());
+        responseMap.put("avatar", user.getAvatar());
+        responseMap.put("favoritesHotel", user.getFavoritesHotels());
+        responseMap.put("favoritesFlight", user.getFavoritesFlights());
+        responseMap.put("recentSearches", user.getRecentSearch());
+
+        return ResponseEntity.ok().body(responseMap);
     }
 }
