@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.models.subModels.Reviews;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class HotelsController {
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> updateHotel(@PathVariable String id, @RequestBody Hotel hotel) {
         Optional<Hotel> existingHotel = hotelsRepository.findById(id);
         if (existingHotel.isPresent()) {
@@ -120,6 +121,8 @@ public class HotelsController {
             Optional.ofNullable(hotel.getPhoto()).ifPresent(h::setPhoto);
             Optional.ofNullable(hotel.getRating()).ifPresent(h::setRating);
             Optional.ofNullable(hotel.getAdvantages()).ifPresent(h::setAdvantages);
+            Optional.ofNullable(hotel.getReviews()).ifPresent(h::setReviews);
+            Optional.ofNullable(hotel.getDescription()).ifPresent(h::setDescription);
             hotelsRepository.save(h);
         });
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
@@ -144,9 +147,18 @@ public class HotelsController {
                 .collect(Collectors.toList()));
     }
 
-
-
-
+    @PostMapping("/review/{id}")
+    public ResponseEntity<Hotel> addReview(@PathVariable String id,@RequestBody Reviews review) {
+        Optional<Hotel> hotelData = hotelsRepository.findById(id);
+        if (hotelData.isPresent()) {
+            Hotel hotel = hotelData.get();
+            hotel.getReviews().add(review);
+            hotelsRepository.save(hotel);
+            return ResponseEntity.ok(hotel);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+    }
 
 
 }

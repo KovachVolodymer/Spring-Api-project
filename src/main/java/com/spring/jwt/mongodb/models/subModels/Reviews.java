@@ -1,20 +1,24 @@
 package com.spring.jwt.mongodb.models.subModels;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class Reviews {
+    private static final AtomicLong idCounter = new AtomicLong();
     @Id
-    private String id;
+    private Long id;
 
     private String photo;
     private String name;
-    private String rating;
+    private Double rating;
     private String comment;
+
+    public Reviews() {
+        this.id = idCounter.incrementAndGet();
+    }
+
 }

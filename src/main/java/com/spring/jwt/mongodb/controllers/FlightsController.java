@@ -2,6 +2,7 @@ package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Flight;
 import com.spring.jwt.mongodb.models.User;
+import com.spring.jwt.mongodb.models.subModels.Reviews;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +153,19 @@ public class FlightsController {
                 .stream()
                 .sorted()
                 .collect(Collectors.toList()));
+    }
+
+    @PostMapping("/review/{id}")
+    public ResponseEntity<String> addReview(@PathVariable String id, @RequestBody Reviews review) {
+        Optional<Flight> flightData = flightsRepository.findById(id);
+        if (flightData.isPresent()) {
+            Flight flight = flightData.get();
+            flight.getReviews().add(review);
+            flightsRepository.save(flight);
+            return ResponseEntity.ok("Review added");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight not found");
+        }
     }
 
 

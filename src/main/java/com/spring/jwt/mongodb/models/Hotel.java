@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -31,7 +32,9 @@ public class Hotel {
     private String photo;
 
     private List<String> advantages;
+
     private List<Reviews> reviews;
+
     private List<Room> rooms;
 
 }
