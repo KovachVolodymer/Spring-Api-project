@@ -120,6 +120,7 @@ public class FlightsController {
             Optional.ofNullable(flight.getToArrive()).ifPresent(flg::setToArrive);
             Optional.ofNullable(flight.getArrivalTime()).ifPresent(flg::setArrivalTime);
             Optional.ofNullable(flight.getDepartureTime()).ifPresent(flg::setDepartureTime);
+            Optional.ofNullable(flight.getPartnerLogo()).ifPresent(flg::setPartnerLogo);
 
             flightsRepository.save(flg);
 
