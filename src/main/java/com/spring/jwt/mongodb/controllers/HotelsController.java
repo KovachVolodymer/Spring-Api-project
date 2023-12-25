@@ -49,7 +49,7 @@ public class HotelsController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> hotelById(@PathVariable String id) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         return hotelData.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
@@ -123,6 +123,7 @@ public class HotelsController {
             Optional.ofNullable(hotel.getAdvantages()).ifPresent(h::setAdvantages);
             Optional.ofNullable(hotel.getReviews()).ifPresent(h::setReviews);
             Optional.ofNullable(hotel.getDescription()).ifPresent(h::setDescription);
+            Optional.ofNullable(hotel.getAlt()).ifPresent(h::setAlt);
             hotelsRepository.save(h);
         });
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
