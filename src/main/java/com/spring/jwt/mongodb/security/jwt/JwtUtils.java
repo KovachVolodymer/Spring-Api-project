@@ -50,7 +50,6 @@ public class JwtUtils {
         claims.put("address", user.getAddress());
         claims.put("birthday", user.getBirthday());
         claims.put("favoritesHotels", user.getFavoritesHotels());
-        claims.put("favoritesFlights", user.getFavoritesFlights());
         claims.put("recentSearch", user.getRecentSearch());
 
 
