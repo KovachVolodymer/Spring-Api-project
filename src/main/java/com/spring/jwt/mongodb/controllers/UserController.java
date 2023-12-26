@@ -44,8 +44,8 @@ public class UserController {
             response.put("address", userData.getAddress());
             response.put("dataBirth", userData.getBirthday());
             response.put("recentSearch", userData.getRecentSearch());
-            response.put("favoritesListHotels", userData.getFavoritesHotels());
-            response.put("favoritesListFlights", userData.getFavoritesFlights());
+            response.put("favoritesHotels", userData.getFavoritesHotels());
+            response.put("favoritesFlights", userData.getFavoritesFlights());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
