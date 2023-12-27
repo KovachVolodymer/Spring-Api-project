@@ -7,14 +7,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+
+@Data
+@AllArgsConstructor
 @Document(collection = "User")
 public class User {
   @Id
@@ -44,9 +47,9 @@ public class User {
 
   private String birthday;
 
-  private List<Hotel> favoritesHotels = new ArrayList<>();
+  private Set<Hotel> favoritesHotels = new HashSet<>();
 
-  private List<Flight> favoritesFlights = new ArrayList<>();
+  private Set<Flight> favoritesFlights = new HashSet<>();
 
   private List<RecentSearch> recentSearch=new ArrayList<>();
 

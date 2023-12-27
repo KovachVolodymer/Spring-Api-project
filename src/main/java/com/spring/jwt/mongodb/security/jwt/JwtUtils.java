@@ -52,7 +52,6 @@ public class JwtUtils {
         claims.put("favoritesHotels", user.getFavoritesHotels());
         claims.put("recentSearch", user.getRecentSearch());
 
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userPrincipal.getEmail())
