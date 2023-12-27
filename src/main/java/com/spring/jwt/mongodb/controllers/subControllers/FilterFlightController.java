@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers.subControllers;
 
 import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -62,7 +63,7 @@ public class FilterFlightController {
         }
 
         return flights.isEmpty()
-                ? ResponseEntity.badRequest().body("No flights found")
+                ? ResponseEntity.badRequest().body(new MessageResponse("No flights found"))
                 : ResponseEntity.ok(flights);
     }
 

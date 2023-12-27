@@ -3,6 +3,7 @@ package com.spring.jwt.mongodb.controllers.subControllers;
 import com.spring.jwt.mongodb.models.Hotel;
 import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.models.subModels.RecentSearch;
+import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/user")
 public class RecentSearchController {
 
@@ -25,7 +27,7 @@ public class RecentSearchController {
     HotelsRepository hotelsRepository;
 
         @PostMapping("/recentSearch")
-        public ResponseEntity<String> recentSearch(@RequestBody RecentSearch recentSearch) {
+        public ResponseEntity<Object> recentSearch(@RequestBody RecentSearch recentSearch) {
             Optional<User> user = userRepository.findById(recentSearch.getUserId());
             Optional<Hotel> hotel = hotelsRepository.findById(recentSearch.getHotelId());
             if (user.isPresent() && hotel.isPresent()) {
@@ -39,9 +41,9 @@ public class RecentSearchController {
 
                 userRepository.save(userData);
 
-                return ResponseEntity.ok("Recent search added");
+                return ResponseEntity.ok(new MessageResponse("Recent search added"));
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("User not found or hotel not found");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User or hotel not found"));
             }
         }
 

@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers.subControllers;
 
 import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class FilterHotelController {
 
 
         return hotels.isEmpty()
-                ? ResponseEntity.badRequest().body("No hotels found")
+                ? ResponseEntity.badRequest().body(new MessageResponse("No hotels found"))
                 : ResponseEntity.ok(hotels);
     }
 

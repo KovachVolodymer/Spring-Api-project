@@ -49,15 +49,14 @@ public class UserController {
             response.put("favoritesFlights", userData.getFavoritesFlights());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            MessageResponse messageResponse = new MessageResponse("User not found");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
         }
 
     }
 
-    @PatchMapping
-    public ResponseEntity<Object> updateUser(@RequestBody User user) {
-        Optional<User> userOptional = userRepository.findById(user.getId());
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updateUser(@PathVariable String id,@RequestBody User user) {
+        Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
             User u = userOptional.get();
@@ -67,21 +66,15 @@ public class UserController {
             Optional.ofNullable(user.getBirthday()).ifPresent(u::setBirthday);
             Optional.ofNullable(user.getAvatar()).ifPresent(u::setAvatar);
             Optional.ofNullable(user.getPassword()).ifPresent(p -> u.setPassword(encoder.encode(p)));
-            if (user.getUsername() == null) {
-                u.setUsername(u.getUsername());
-            } else if (userRepository.existsByUsername(user.getUsername())) {
-                u.setUsername(u.getUsername());
-                MessageResponse messageResponse = new MessageResponse("User name already exists");
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
-            } else {
-                u.setUsername(user.getUsername());
+            if (userRepository.existsByEmail(user.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Email already in use"));
             }
+            u.setEmail(user.getEmail());
+
             userRepository.save(u);
-            MessageResponse messageResponse = new MessageResponse("User updated successfully");
-            return ResponseEntity.ok(messageResponse);
+            return ResponseEntity.ok(new MessageResponse("User updated successfully"));
         } else {
-            MessageResponse messageResponse = new MessageResponse("User not found");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
         }
     }
 
@@ -97,11 +90,9 @@ public class UserController {
             User user = userData.get();
             user.getFavoritesFlights().add(flight);
             userRepository.save(user);
-            MessageResponse messageResponse = new MessageResponse("Flight added to favorites successfully");
-            return ResponseEntity.ok(messageResponse);
+            return ResponseEntity.ok(new MessageResponse("Flight added to favorites successfully"));
         } else {
-            MessageResponse messageResponse = new MessageResponse("Flight or user not found");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight or user not found"));
         }
 
     }
@@ -116,11 +107,9 @@ public class UserController {
             User user = userData.get();
             user.getFavoritesFlights().remove(flight);
             userRepository.save(user);
-            MessageResponse messageResponse = new MessageResponse("Flight removed from favorites successfully");
-            return ResponseEntity.ok(messageResponse);
+            return ResponseEntity.ok(new MessageResponse("Flight removed from favorites successfully"));
         } else {
-            MessageResponse messageResponse = new MessageResponse("Flight or user not found");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight or user not found"));
         }
 
     }
@@ -136,11 +125,10 @@ public class UserController {
             User user = userData.get();
             user.getFavoritesHotels().remove(hotel);
             userRepository.save(user);
-            MessageResponse messageResponse = new MessageResponse("Hotel removed from favorites successfully");
-            return ResponseEntity.ok(messageResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Hotel removed from favorites successfully"));
         } else {
-            MessageResponse messageResponse = new MessageResponse("Hotel or user not found");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Hotel or user not found"));
         }
 
     }
@@ -159,11 +147,10 @@ public class UserController {
             User user = userData.get();
             user.getFavoritesHotels().add(hotel);
             userRepository.save(user);
-            MessageResponse messageResponse = new MessageResponse("Hotel added to favorites successfully");
-            return ResponseEntity.ok(messageResponse);
+            return ResponseEntity.ok(new MessageResponse("Hotel added to favorites successfully"));
         } else {
-            MessageResponse messageResponse = new MessageResponse("Hotel or user not found");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageResponse);
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Hotel or user not found"));
         }
 
     }

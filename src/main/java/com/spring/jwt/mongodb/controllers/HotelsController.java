@@ -2,6 +2,7 @@ package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.Hotel;
 import com.spring.jwt.mongodb.models.subModels.Reviews;
+import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,17 +96,17 @@ public class HotelsController {
 
     @DeleteMapping("/{id}")
     // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<String> deleteHotel(@PathVariable String id) {
+    public ResponseEntity<Object> deleteHotel(@PathVariable String id) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         if (hotelData.isPresent()) {
             try {
                 hotelsRepository.deleteById(id);
-                return ResponseEntity.ok("Hotel was successfully deleted.");
+                return ResponseEntity.ok(new MessageResponse("Hotel deleted successfully"));
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel not found");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Hotel not found"));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Hotel not found");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Hotel not found"));
         }
     }
 
@@ -149,15 +150,15 @@ public class HotelsController {
     }
 
     @PostMapping("/review/{id}")
-    public ResponseEntity<Hotel> addReview(@PathVariable String id,@RequestBody Reviews review) {
+    public ResponseEntity<Object> addReview(@PathVariable String id,@RequestBody Reviews review) {
         Optional<Hotel> hotelData = hotelsRepository.findById(id);
         if (hotelData.isPresent()) {
             Hotel hotel = hotelData.get();
             hotel.getReviews().add(review);
             hotelsRepository.save(hotel);
-            return ResponseEntity.ok(hotel);
+            return ResponseEntity.ok(new MessageResponse("Review added successfully"));
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Hotel not found"));
         }
     }
 

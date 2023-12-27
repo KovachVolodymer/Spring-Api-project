@@ -3,6 +3,7 @@ package com.spring.jwt.mongodb.controllers;
 import com.spring.jwt.mongodb.models.Flight;
 import com.spring.jwt.mongodb.models.User;
 import com.spring.jwt.mongodb.models.subModels.Reviews;
+import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,17 +131,17 @@ public class FlightsController {
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<String> deleteFlight(@PathVariable String id) {
+    public ResponseEntity<Object> deleteFlight(@PathVariable String id) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {
             try {
                 flightsRepository.deleteById(id);
-                return ResponseEntity.ok("Flight was successfully deleted.");
+                return ResponseEntity.ok(new MessageResponse("Flight deleted successfully"));
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight not found");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight not found"));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight not found");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight not found"));
         }
     }
 
@@ -157,15 +158,19 @@ public class FlightsController {
     }
 
     @PostMapping("/review/{id}")
-    public ResponseEntity<String> addReview(@PathVariable String id, @RequestBody Reviews review) {
+    public ResponseEntity<Object> addReview(@PathVariable String id, @RequestBody Reviews review) {
         Optional<Flight> flightData = flightsRepository.findById(id);
         if (flightData.isPresent()) {
             Flight flight = flightData.get();
+            if (flight.getReviews() == null) {
+                flight.setReviews(new ArrayList<>());
+            }
             flight.getReviews().add(review);
             flightsRepository.save(flight);
-            return ResponseEntity.ok("Review added");
+            return ResponseEntity.ok(new MessageResponse("Review added successfully"));
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Flight not found");
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight not found"));
         }
     }
 
