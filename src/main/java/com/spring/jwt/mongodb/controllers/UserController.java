@@ -69,7 +69,7 @@ public class UserController {
             if (userRepository.existsByEmail(user.getEmail())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Email already in use"));
             }
-            u.setEmail(user.getEmail());
+            Optional.ofNullable(user.getEmail()).ifPresent(u::setEmail);
 
             userRepository.save(u);
             return ResponseEntity.ok(new MessageResponse("User updated successfully"));
