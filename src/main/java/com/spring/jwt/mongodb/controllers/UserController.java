@@ -5,6 +5,7 @@ import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,9 +80,10 @@ public class UserController {
     }
 
     @PostMapping("/favoriteFlight")
-    public ResponseEntity<Object> favoriteFlight(@RequestBody Map<String, String> body) {
+    public  ResponseEntity<Object> favoriteFlight(@RequestBody Map<String, String> body) {
         String flightId = body.get("flightId");
         String userId = body.get("userId");
+
         Optional<Flight> flightData = flightsRepository.findById(flightId);
         Optional<User> userData = userRepository.findById(userId);
 
@@ -99,6 +101,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}/favoriteFlight/{flightId}")
     public ResponseEntity<Object> deleteFavoriteFlight(@PathVariable String flightId, @PathVariable String userId) {
+
         Optional<Flight> flightData = flightsRepository.findById(flightId);
         Optional<User> userData = userRepository.findById(userId);
 

@@ -29,7 +29,6 @@ public class Hotel {
 
     private Integer price;
 
-
     private String photo;
 
     private List<String> advantages;
