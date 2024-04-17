@@ -20,48 +20,50 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "User")
 public class User {
-  @Id
-  private String id;
+    @Id
+    private String id;
 
-  @NotBlank
-  @Size(max = 20)
-  private String username;
+    @NotBlank
+    @Size(max = 20)
+    private String username;
 
-  @NotBlank
-  @Size(max = 50)
-  @Email
-  private String email;
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    private String email;
 
-  @NotBlank
-  @Size(max = 120)
-  private String password;
+    @NotBlank
+    @Size(max = 120)
+    private String password;
 
-  @DBRef
-  private Set<Role> roles = new HashSet<>();
+    @DBRef
+    private Set<Role> roles = new HashSet<>();
 
-  private String avatar;
+    private String avatar;
 
-  private String phone;
+    private String phone;
 
-  private String address;
+    private String address;
 
-  private String birthday;
+    private String birthday;
 
-  private Set<Hotel> favoritesHotels = new HashSet<>();
+    private Set<Card> card = new HashSet<>();
 
-  private Set<Flight> favoritesFlights = new HashSet<>();
+    private Set<Hotel> favoritesHotels = new HashSet<>();
 
-  private List<RecentSearch> recentSearch=new ArrayList<>();
+    private Set<Flight> favoritesFlights = new HashSet<>();
+
+    private List<RecentSearch> recentSearch = new ArrayList<>();
 
 
-  public User(String username, String email, String password, String phone) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.phone = phone;
-  }
+    public User(String username, String email, String password, String phone) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+    }
 
-  public User() {
+    public User() {
 
-  }
+    }
 }

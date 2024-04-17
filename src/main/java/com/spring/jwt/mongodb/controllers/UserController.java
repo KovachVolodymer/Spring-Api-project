@@ -1,24 +1,32 @@
 package com.spring.jwt.mongodb.controllers;
 
 import com.spring.jwt.mongodb.models.*;
+import com.spring.jwt.mongodb.payload.cvc.CVVEncryptionService;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
+import com.spring.jwt.mongodb.security.services.UserDetailsImpl;
+import com.spring.jwt.mongodb.security.services.UserDetailsServiceImpl;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController{
 
     @Autowired
     UserRepository userRepository;
@@ -31,6 +39,9 @@ public class UserController {
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    CVVEncryptionService cvvEncryptionService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id) {
@@ -56,7 +67,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable String id,@RequestBody User user) {
+    public ResponseEntity<Object> updateUser(@PathVariable String id, @RequestBody User user) {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
@@ -80,7 +91,7 @@ public class UserController {
     }
 
     @PostMapping("/favoriteFlight")
-    public  ResponseEntity<Object> favoriteFlight(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Object> favoriteFlight(@RequestBody Map<String, String> body) {
         String flightId = body.get("flightId");
         String userId = body.get("userId");
 
@@ -158,7 +169,36 @@ public class UserController {
 
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PostMapping("/addCard")
+    public ResponseEntity<Object> addCard(@RequestBody Card card, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (card == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Card is null"));
+        }
+        if (card.getExpiryDate() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Expiry date is required"));
+        }
 
+        Optional<User> userData = userRepository.findById(userDetails.getId());
+        if (userData.isPresent()) {
+            User user = userData.get();
+
+            String input = card.getExpiryDate();
+            String[] parts = input.split("-");
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            // Форматування місяця/року у потрібний формат
+            String formattedDate = String.format("%02d/%02d", month, year % 100);
+
+            card.setCvc(cvvEncryptionService.encryptCVV(card.getCvc()));
+
+            card.setExpiryDate(formattedDate);
+            user.getCard().add(card);
+            userRepository.save(user);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Card is add"));
+    }
 
 
 }

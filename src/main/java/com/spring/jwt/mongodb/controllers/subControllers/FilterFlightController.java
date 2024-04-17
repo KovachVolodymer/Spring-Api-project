@@ -32,7 +32,7 @@ public class FilterFlightController {
             @RequestParam(name = "airLine", defaultValue = "") String airLine,
             @RequestParam(name = "rating", defaultValue = "0.0") String rating,
             @RequestParam(name = "sort", defaultValue = "") String sort,
-            @RequestParam(name = "departureTime", defaultValue = "2024-01-20T00:00:00") String departureTime){
+            @RequestParam(name = "departureTime", defaultValue = "2024-04-20T00:00:00") String departureTime){
 
         int minPriceInt = Integer.parseInt(minPrice);
         int maxPriceInt = Integer.parseInt(maxPrice);
