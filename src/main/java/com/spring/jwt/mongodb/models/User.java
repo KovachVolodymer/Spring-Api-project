@@ -47,7 +47,7 @@ public class User {
 
     private String birthday;
 
-    private Set<Card> card = new HashSet<>();
+    private Set<Card> cards = new HashSet<>();
 
     private Set<Hotel> favoritesHotels = new HashSet<>();
 

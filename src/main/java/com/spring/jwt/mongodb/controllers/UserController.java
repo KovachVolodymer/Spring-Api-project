@@ -170,7 +170,7 @@ public class UserController{
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PostMapping("/addCard")
+    @PostMapping("/card")
     public ResponseEntity<Object> addCard(@RequestBody Card card, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (card == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Card is null"));
@@ -193,11 +193,28 @@ public class UserController{
             card.setCvc(cvvEncryptionService.encryptCVV(card.getCvc()));
 
             card.setExpiryDate(formattedDate);
-            user.getCard().add(card);
+            user.getCards().add(card);
             userRepository.save(user);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Card is add"));
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @DeleteMapping("/card/{id}")
+    public ResponseEntity<Object> deleteCard(@PathVariable String id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Optional<User> userData = userRepository.findById(userDetails.getId());
+        if (userData.isPresent()) {
+            User user = userData.get();
+            if(user.getCards().isEmpty() || user.getCards().stream().noneMatch(card -> card.getId().equals(id))){
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Card not found"));
+            }
+            user.getCards().removeIf(card -> card.getId().equals(id));
+
+            userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Card is deleted"));
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
     }
 
 

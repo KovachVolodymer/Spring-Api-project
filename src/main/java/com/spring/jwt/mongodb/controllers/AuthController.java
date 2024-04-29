@@ -79,6 +79,7 @@ public class AuthController {
         responseMap.put("favoritesFlight", user.getFavoritesFlights());
         responseMap.put("recentSearches", user.getRecentSearch());
         responseMap.put("phone", user.getPhone());
+        responseMap.put("card", user.getCards());
         return ResponseEntity.ok(responseMap);
     }
 
@@ -151,11 +152,7 @@ public class AuthController {
         responseMap.put("id", userDetails.getId());
         responseMap.put("username", userDetails.getUsername());
         responseMap.put("email", userDetails.getEmail());
-        responseMap.put("avatar", user.getAvatar());
-        responseMap.put("favoritesHotel", user.getFavoritesHotels());
-        responseMap.put("favoritesFlight", user.getFavoritesFlights());
-        responseMap.put("recentSearches", user.getRecentSearch());
-        responseMap.put("phone", user.getPhone());
+
 
         return ResponseEntity.ok().body(responseMap);
     }

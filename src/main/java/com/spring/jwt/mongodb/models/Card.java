@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicLong;
+
 @Setter
 @Getter
 public class Card {
+    private static final AtomicLong idCounter = new AtomicLong();
+
     @Id
     private String id;
 
@@ -17,6 +19,10 @@ public class Card {
     private String nameOnCard;
     private String typeCard;
     private String expiryDate;
+
+    public Card() {
+        this.id = String.valueOf(idCounter.incrementAndGet());
+    }
 
 
 }
