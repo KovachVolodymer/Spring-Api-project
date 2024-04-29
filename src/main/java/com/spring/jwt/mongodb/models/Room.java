@@ -12,12 +12,13 @@ public class Room {
     @Id
     private String id;
 
-    private String hotelId;
+
 
     private String photo;
     private String name;
     private Integer doubleBeds;
     private Integer singleBeds;
     private Integer price;
+    private Integer amount;
 
 }

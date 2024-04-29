@@ -14,9 +14,9 @@ public class RoomController {
     @Autowired
     HotelsRepository hotelsRepository;
 
-    @PostMapping("/rooms")
-    public ResponseEntity<Object> addRoom(@RequestBody Room room) {
-        hotelsRepository.findById(room.getHotelId()).ifPresent(hotel -> {
+    @PostMapping("{id}/rooms")
+    public ResponseEntity<Object> addRoom(@RequestBody Room room, @PathVariable String id) {
+        hotelsRepository.findById(id).ifPresent(hotel -> {
             hotel.getRooms().add(room);
             hotelsRepository.save(hotel);
         });
