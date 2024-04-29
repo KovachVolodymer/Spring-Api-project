@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.controllers.subControllers;
+package com.spring.jwt.mongodb.controllers.hotel;
 
 import com.spring.jwt.mongodb.models.Hotel;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
@@ -7,11 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)

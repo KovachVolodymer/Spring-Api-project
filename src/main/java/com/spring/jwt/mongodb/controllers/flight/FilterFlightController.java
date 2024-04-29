@@ -1,17 +1,13 @@
-package com.spring.jwt.mongodb.controllers.subControllers;
+package com.spring.jwt.mongodb.controllers.flight;
 
 import com.spring.jwt.mongodb.models.Flight;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;

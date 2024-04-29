@@ -1,7 +1,7 @@
-package com.spring.jwt.mongodb.controllers;
+package com.spring.jwt.mongodb.controllers.hotel;
 
 import com.spring.jwt.mongodb.models.Hotel;
-import com.spring.jwt.mongodb.models.subModels.Reviews;
+import com.spring.jwt.mongodb.models.Reviews;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;

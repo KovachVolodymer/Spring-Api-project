@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.models.subModels;
+package com.spring.jwt.mongodb.models;
 
 import lombok.Getter;
 import lombok.Setter;

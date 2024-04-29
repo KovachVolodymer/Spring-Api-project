@@ -1,11 +1,9 @@
-package com.spring.jwt.mongodb.controllers;
+package com.spring.jwt.mongodb.controllers.flight;
 
 import com.spring.jwt.mongodb.models.Flight;
-import com.spring.jwt.mongodb.models.User;
-import com.spring.jwt.mongodb.models.subModels.Reviews;
+import com.spring.jwt.mongodb.models.Reviews;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
-import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

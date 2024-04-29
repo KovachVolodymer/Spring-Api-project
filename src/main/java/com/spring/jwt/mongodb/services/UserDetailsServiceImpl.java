@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.security.services;
+package com.spring.jwt.mongodb.services;
 
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.spring.jwt.mongodb.models.User;
+import com.spring.jwt.mongodb.models.user.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

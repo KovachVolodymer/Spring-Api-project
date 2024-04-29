@@ -1,15 +1,14 @@
-package com.spring.jwt.mongodb.controllers.subControllers;
+package com.spring.jwt.mongodb.controllers.user;
 
 import com.spring.jwt.mongodb.models.Hotel;
-import com.spring.jwt.mongodb.models.User;
-import com.spring.jwt.mongodb.models.subModels.RecentSearch;
+import com.spring.jwt.mongodb.models.user.User;
+import com.spring.jwt.mongodb.models.user.RecentSearch;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

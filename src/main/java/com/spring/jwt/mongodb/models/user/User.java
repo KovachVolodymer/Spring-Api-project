@@ -1,16 +1,15 @@
-package com.spring.jwt.mongodb.models;
+package com.spring.jwt.mongodb.models.user;
 
 import java.util.*;
 
-import com.spring.jwt.mongodb.models.subModels.RecentSearch;
+import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.Hotel;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;

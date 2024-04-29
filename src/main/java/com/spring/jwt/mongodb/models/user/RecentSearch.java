@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.models.subModels;
+package com.spring.jwt.mongodb.models.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

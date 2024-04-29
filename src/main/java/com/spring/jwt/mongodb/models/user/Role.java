@@ -1,6 +1,5 @@
-package com.spring.jwt.mongodb.models;
+package com.spring.jwt.mongodb.models.user;
 
-import com.spring.jwt.mongodb.models.subModels.ERole;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;

@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.security.services;
+package com.spring.jwt.mongodb.services;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.spring.jwt.mongodb.models.User;
+import com.spring.jwt.mongodb.models.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Getter

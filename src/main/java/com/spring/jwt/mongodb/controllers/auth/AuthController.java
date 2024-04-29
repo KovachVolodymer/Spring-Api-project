@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.controllers;
+package com.spring.jwt.mongodb.controllers.auth;
 
 import java.util.*;
 
@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.spring.jwt.mongodb.models.subModels.ERole;
-import com.spring.jwt.mongodb.models.Role;
-import com.spring.jwt.mongodb.models.User;
+import com.spring.jwt.mongodb.models.user.ERole;
+import com.spring.jwt.mongodb.models.user.Role;
+import com.spring.jwt.mongodb.models.user.User;
 import com.spring.jwt.mongodb.payload.request.LoginRequest;
 import com.spring.jwt.mongodb.payload.request.SignupRequest;
 import com.spring.jwt.mongodb.repository.RoleRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import com.spring.jwt.mongodb.security.jwt.JwtUtils;
-import com.spring.jwt.mongodb.security.services.UserDetailsImpl;
+import com.spring.jwt.mongodb.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

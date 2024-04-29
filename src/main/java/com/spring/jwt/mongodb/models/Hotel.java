@@ -1,13 +1,10 @@
 package com.spring.jwt.mongodb.models;
 
-import com.spring.jwt.mongodb.models.subModels.Reviews;
-import com.spring.jwt.mongodb.models.subModels.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

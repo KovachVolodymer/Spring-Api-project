@@ -1,6 +1,5 @@
-package com.spring.jwt.mongodb.models.subModels;
+package com.spring.jwt.mongodb.models;
 
-import com.spring.jwt.mongodb.models.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

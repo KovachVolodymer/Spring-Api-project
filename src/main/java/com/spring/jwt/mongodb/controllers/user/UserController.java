@@ -1,26 +1,24 @@
-package com.spring.jwt.mongodb.controllers;
+package com.spring.jwt.mongodb.controllers.user;
 
-import com.spring.jwt.mongodb.models.*;
+
+import com.spring.jwt.mongodb.models.user.Card;
+import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.models.user.User;
 import com.spring.jwt.mongodb.payload.cvc.CVVEncryptionService;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
-import com.spring.jwt.mongodb.security.services.UserDetailsImpl;
-import com.spring.jwt.mongodb.security.services.UserDetailsServiceImpl;
-import jakarta.validation.constraints.NotNull;
+import com.spring.jwt.mongodb.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController

@@ -1,6 +1,5 @@
 package com.spring.jwt.mongodb.models;
 
-import com.spring.jwt.mongodb.models.subModels.Reviews;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

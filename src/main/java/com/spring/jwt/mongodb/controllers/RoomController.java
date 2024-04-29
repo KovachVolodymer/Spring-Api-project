@@ -1,6 +1,6 @@
-package com.spring.jwt.mongodb.controllers.subControllers;
+package com.spring.jwt.mongodb.controllers;
 
-import com.spring.jwt.mongodb.models.subModels.Room;
+import com.spring.jwt.mongodb.models.Room;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.spring.jwt.mongodb.models.User;
+import com.spring.jwt.mongodb.models.user.User;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.spring.jwt.mongodb.security.services.UserDetailsImpl;
+import com.spring.jwt.mongodb.services.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
