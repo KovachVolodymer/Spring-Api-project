@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +33,10 @@ public class Hotel {
 
     private List<Reviews> reviews;
 
-    private List<Room> rooms;
+    private List<Room> rooms = new ArrayList<>();
+
+    public Hotel() {
+    }
 
     @Override
     public boolean equals(Object o) {

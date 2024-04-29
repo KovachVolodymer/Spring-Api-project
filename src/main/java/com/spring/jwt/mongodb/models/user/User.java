@@ -54,6 +54,8 @@ public class User {
 
     private List<RecentSearch> recentSearch = new ArrayList<>();
 
+    private List<BookedRooms> bookedRooms = new ArrayList<>();
+
 
     public User(String username, String email, String password, String phone) {
         this.username = username;
