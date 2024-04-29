@@ -33,7 +33,7 @@ public class UserController{
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/me")
     public ResponseEntity<Object> updateMe(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody User user) {
         return userService.updateUser(userDetails.getId(), user);
     }
