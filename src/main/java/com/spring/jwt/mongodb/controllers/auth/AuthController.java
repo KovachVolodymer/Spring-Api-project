@@ -27,7 +27,7 @@ import com.spring.jwt.mongodb.payload.request.SignupRequest;
 import com.spring.jwt.mongodb.repository.RoleRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import com.spring.jwt.mongodb.security.jwt.JwtUtils;
-import com.spring.jwt.mongodb.services.UserDetailsImpl;
+import com.spring.jwt.mongodb.services.user.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

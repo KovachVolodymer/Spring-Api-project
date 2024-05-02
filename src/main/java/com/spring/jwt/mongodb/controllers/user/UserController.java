@@ -4,7 +4,7 @@ package com.spring.jwt.mongodb.controllers.user;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.user.Card;
 import com.spring.jwt.mongodb.models.user.User;
-import com.spring.jwt.mongodb.services.UserDetailsImpl;
+import com.spring.jwt.mongodb.services.user.UserDetailsImpl;
 import com.spring.jwt.mongodb.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -85,7 +85,6 @@ public class UserController{
     public ResponseEntity<Object> orderRoom(@RequestBody OrderRoom orderRoom, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.orderRoom(orderRoom, userDetails.getId());
     }
-
 
 }
 

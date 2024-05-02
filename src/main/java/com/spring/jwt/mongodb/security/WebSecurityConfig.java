@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.spring.jwt.mongodb.security.jwt.AuthTokenFilter;
-import com.spring.jwt.mongodb.services.UserDetailsServiceImpl;
+import com.spring.jwt.mongodb.services.user.UserDetailsServiceImpl;
 
 @Configuration
 //@EnableWebSecurity

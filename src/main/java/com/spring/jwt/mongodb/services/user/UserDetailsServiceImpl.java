@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.services;
+package com.spring.jwt.mongodb.services.user;
 
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

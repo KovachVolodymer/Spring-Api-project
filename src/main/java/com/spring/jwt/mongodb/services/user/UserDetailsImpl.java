@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.services;
+package com.spring.jwt.mongodb.services.user;
 
 import java.util.Collection;
 import java.util.List;
