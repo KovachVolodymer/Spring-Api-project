@@ -3,6 +3,7 @@ package com.spring.jwt.mongodb.services.user;
 import com.spring.jwt.mongodb.models.Flight;
 import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
+import com.spring.jwt.mongodb.models.hotel.Room;
 import com.spring.jwt.mongodb.models.user.Card;
 import com.spring.jwt.mongodb.models.user.RecentSearch;
 import com.spring.jwt.mongodb.models.user.User;
@@ -242,7 +243,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<Object> orderRoom(OrderRoom orderRoom, String userId) {
         Optional<User> userOptional = userRepository.findById(userId);
-
         User user = userOptional.get();
 
         // Перевірка наявності готелю
@@ -253,20 +253,31 @@ public class UserServiceImpl implements UserService {
         Hotel hotel = hotelsRepository.findById(orderRoom.getHotelId()).get();
 
         // Перевірка наявності кімнати
-        if (hotel.getRooms().stream().noneMatch(room -> room.getId().equals(orderRoom.getRoomId()))) {
+        Optional<Room> roomOptional = hotel.getRooms().stream().filter(room -> room.getId().equals(orderRoom.getRoomId())).findFirst();
+        if (!roomOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Room not found"));
         }
+        Room room = roomOptional.get();
 
         // Перевірка наявності картки
-        boolean cardExists = user.getCards().stream().anyMatch
-                (card -> card.getId().equals(orderRoom.getCardId()));
+        boolean cardExists = user.getCards().stream().anyMatch(card -> card.getId().equals(orderRoom.getCardId()));
         if (!cardExists) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Card not found"));
+        }
+
+        // Зменшення кількості доступних кімнат
+        if (room.getAmount() > 0) {
+            room.setAmount(room.getAmount() - 1);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Room not available"));
         }
 
         // Додавання замовлення кімнати до користувача і збереження змін
         user.getOrderRooms().add(orderRoom);
         userRepository.save(user);
+
+        // Оновлення об'єкта Hotel в базі даних
+        hotelsRepository.save(hotel);
 
         return ResponseEntity.ok(new MessageResponse("Room ordered"));
     }

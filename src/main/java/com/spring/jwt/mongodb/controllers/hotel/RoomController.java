@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.controllers;
+package com.spring.jwt.mongodb.controllers.hotel;
 
 import com.spring.jwt.mongodb.models.hotel.Room;
 import com.spring.jwt.mongodb.services.hotel.HotelService;
