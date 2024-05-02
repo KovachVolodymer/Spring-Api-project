@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.services.user;
 
 import com.spring.jwt.mongodb.models.user.Card;
+import com.spring.jwt.mongodb.models.user.RecentSearch;
 import com.spring.jwt.mongodb.models.user.User;
 import com.spring.jwt.mongodb.services.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,4 +31,8 @@ public interface UserService {
     ResponseEntity<Object> addCard(Card card, String id);
 
     ResponseEntity<Object> deleteCard(String idCard, String id);
+
+    ResponseEntity<Object> recentSearch(RecentSearch recentSearch);
+
+    ResponseEntity<List<RecentSearch>> getRecentSearch(String id);
 }

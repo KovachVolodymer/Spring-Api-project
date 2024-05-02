@@ -26,16 +26,17 @@ public class UserController{
     public ResponseEntity<Object> getMe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getUser(userDetails.getId());
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable String id) {
-        return userService.getUser(id);
-    }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PatchMapping("/me")
     public ResponseEntity<Object> updateMe(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody User user) {
         return userService.updateUser(userDetails.getId(), user);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getUser(@PathVariable String id) {
+        return userService.getUser(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

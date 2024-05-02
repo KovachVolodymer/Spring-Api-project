@@ -3,6 +3,7 @@ package com.spring.jwt.mongodb.services.user;
 import com.spring.jwt.mongodb.models.Flight;
 import com.spring.jwt.mongodb.models.Hotel;
 import com.spring.jwt.mongodb.models.user.Card;
+import com.spring.jwt.mongodb.models.user.RecentSearch;
 import com.spring.jwt.mongodb.models.user.User;
 import com.spring.jwt.mongodb.payload.cvc.CVVEncryptionService;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
@@ -15,13 +16,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
@@ -37,7 +40,6 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     CVVEncryptionService cvvEncryptionService;
-
 
 
     @Override
@@ -192,7 +194,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> userData = userRepository.findById(id);
         if (userData.isPresent()) {
             User user = userData.get();
-            if(user.getCards().isEmpty() || user.getCards().stream().noneMatch(card -> card.getId().equals(id))){
+            if (user.getCards().isEmpty() || user.getCards().stream().noneMatch(card -> card.getId().equals(id))) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Card not found"));
             }
             user.getCards().removeIf(card -> card.getId().equals(id));
@@ -201,5 +203,38 @@ public class UserServiceImpl implements UserService{
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Card is deleted"));
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
+    }
+
+    @Override
+    public ResponseEntity<Object> recentSearch(RecentSearch recentSearch) {
+        Optional<User> user = userRepository.findById(recentSearch.getUserId());
+        Optional<Hotel> hotel = hotelsRepository.findById(recentSearch.getHotelId());
+        if (user.isPresent() && hotel.isPresent()) {
+            User userData = user.get();
+            Hotel hotelData = hotel.get();
+
+            recentSearch.setAlt(hotelData.getAlt());
+            recentSearch.setPhoto(hotelData.getPhoto());
+            recentSearch.setCity(hotelData.getLocation());
+
+
+            userRepository.save(userData);
+
+            return ResponseEntity.ok(new MessageResponse("Recent search added"));
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User or hotel not found"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<RecentSearch>> getRecentSearch(String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User userData = user.get();
+            List<RecentSearch> recentSearchList = userData.getRecentSearch();
+            return ResponseEntity.ok(recentSearchList);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
     }
 }
