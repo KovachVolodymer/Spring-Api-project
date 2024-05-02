@@ -17,7 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/flights")
 public class FilterFlightController {
-
+    @Autowired
     FlightService flightService;
 
 

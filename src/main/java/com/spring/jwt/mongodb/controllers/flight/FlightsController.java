@@ -21,7 +21,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/flights")
 public class FlightsController {
-
+    @Autowired
     FlightService flightService;
 
     @GetMapping("")

@@ -21,7 +21,7 @@ import static org.springframework.http.ResponseEntity.*;
 @RestController
 @RequestMapping("/api/hotels")
 public class HotelsController {
-
+    @Autowired
     HotelService hotelService;
 
     @GetMapping

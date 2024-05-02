@@ -19,7 +19,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/user")
 public class RecentSearchController {
-
+    @Autowired
     UserService userService;
 
         @PostMapping("/recentSearch")

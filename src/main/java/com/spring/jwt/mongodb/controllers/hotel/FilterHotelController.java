@@ -14,7 +14,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/hotels")
 public class FilterHotelController {
-
+    @Autowired
     HotelService hotelService;
 
     @GetMapping("/filter")

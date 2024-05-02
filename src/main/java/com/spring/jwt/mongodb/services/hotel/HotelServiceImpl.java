@@ -2,6 +2,7 @@ package com.spring.jwt.mongodb.services.hotel;
 
 import com.spring.jwt.mongodb.models.Hotel;
 import com.spring.jwt.mongodb.models.Reviews;
+import com.spring.jwt.mongodb.models.Room;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
@@ -185,5 +186,26 @@ public class HotelServiceImpl implements HotelService{
         return hotels.isEmpty()
                 ? ResponseEntity.badRequest().body(new MessageResponse("No hotels found"))
                 : ResponseEntity.ok(hotels);
+    }
+
+    @Override
+    public ResponseEntity<Object> addRoom(Room room, String id) {
+        hotelsRepository.findById(id).ifPresent(hotel -> {
+            hotel.getRooms().add(room);
+            hotelsRepository.save(hotel);
+        });
+        return ResponseEntity.ok().body(new MessageResponse("Room added"));
+    }
+
+    @Override
+    public ResponseEntity<Object> deleteRoom(String id, String roomId) {
+
+
+
+        hotelsRepository.findById(id).ifPresent(hotel -> {
+            hotel.getRooms().removeIf(room -> room.getId().equals(roomId));
+            hotelsRepository.save(hotel);
+        });
+        return ResponseEntity.ok().body(new MessageResponse("Room deleted"));
     }
 }
