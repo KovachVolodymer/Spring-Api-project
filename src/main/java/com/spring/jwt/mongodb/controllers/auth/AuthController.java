@@ -49,12 +49,12 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         if (!userRepository.existsByEmail(loginRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: User is not found!"));
+                    .body(new MessageResponse("Error: Email is not found!"));
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -65,7 +65,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-
+        // Змінено тут: правильно обробляємо Optional
         User user = (User) userRepository.findByEmail(userDetails.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 

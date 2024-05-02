@@ -1,8 +1,8 @@
 package com.spring.jwt.mongodb.services.hotel;
 
-import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.Reviews;
-import com.spring.jwt.mongodb.models.Room;
+import com.spring.jwt.mongodb.models.hotel.Room;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
@@ -207,5 +207,34 @@ public class HotelServiceImpl implements HotelService{
             hotelsRepository.save(hotel);
         });
         return ResponseEntity.ok().body(new MessageResponse("Room deleted"));
+    }
+
+    @Override
+    public ResponseEntity<Object> updateRoom(Room room, String id, String roomId) {
+        hotelsRepository.findById(id).ifPresent(hotel -> {
+            hotel.getRooms().removeIf(r -> r.getId().equals(roomId));
+            hotel.getRooms().add(room);
+            hotelsRepository.save(hotel);
+        });
+        return ResponseEntity.ok().body(new MessageResponse("Room updated"));
+    }
+
+    @Override
+    public ResponseEntity<Object> patchRoom(Room room, String id, String roomId) {
+        hotelsRepository.findById(id).ifPresent(hotel -> {
+            hotel.getRooms().stream()
+                    .filter(r -> r.getId().equals(roomId))
+                    .findFirst()
+                    .ifPresent(r -> {
+                        Optional.ofNullable(room.getName()).ifPresent(r::setName);
+                        Optional.ofNullable(room.getPhoto()).ifPresent(r::setPhoto);
+                        Optional.ofNullable(room.getPrice()).ifPresent(r::setPrice);
+                        Optional.ofNullable(room.getDoubleBeds()).ifPresent(r::setDoubleBeds);
+                        Optional.ofNullable(room.getSingleBeds()).ifPresent(r::setSingleBeds);
+                        Optional.ofNullable(room.getAmount()).ifPresent(r::setAmount);
+                    });
+            hotelsRepository.save(hotel);
+        });
+        return ResponseEntity.ok().body(new MessageResponse("Room updated"));
     }
 }

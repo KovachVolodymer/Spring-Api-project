@@ -1,7 +1,8 @@
 package com.spring.jwt.mongodb.services.user;
 
 import com.spring.jwt.mongodb.models.Flight;
-import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.models.hotel.Hotel;
+import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.user.Card;
 import com.spring.jwt.mongodb.models.user.RecentSearch;
 import com.spring.jwt.mongodb.models.user.User;
@@ -10,13 +11,11 @@ import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
-import com.spring.jwt.mongodb.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +57,8 @@ public class UserServiceImpl implements UserService {
             response.put("recentSearch", userData.getRecentSearch());
             response.put("favoritesHotels", userData.getFavoritesHotels());
             response.put("favoritesFlights", userData.getFavoritesFlights());
+            response.put("cards", userData.getCards());
+            response.put("orderRooms", userData.getOrderRooms());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
@@ -237,4 +238,38 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
+
+    @Override
+    public ResponseEntity<Object> orderRoom(OrderRoom orderRoom, String userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        User user = userOptional.get();
+
+        // Перевірка наявності готелю
+        if (!hotelsRepository.existsById(orderRoom.getHotelId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Hotel not found"));
+        }
+
+        Hotel hotel = hotelsRepository.findById(orderRoom.getHotelId()).get();
+
+        // Перевірка наявності кімнати
+        if (hotel.getRooms().stream().noneMatch(room -> room.getId().equals(orderRoom.getRoomId()))) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Room not found"));
+        }
+
+        // Перевірка наявності картки
+        boolean cardExists = user.getCards().stream().anyMatch
+                (card -> card.getId().equals(orderRoom.getCardId()));
+        if (!cardExists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Card not found"));
+        }
+
+        // Додавання замовлення кімнати до користувача і збереження змін
+        user.getOrderRooms().add(orderRoom);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("Room ordered"));
+    }
+
+
 }

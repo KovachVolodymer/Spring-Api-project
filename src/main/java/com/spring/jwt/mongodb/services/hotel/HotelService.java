@@ -1,11 +1,9 @@
 package com.spring.jwt.mongodb.services.hotel;
 
-import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.Reviews;
-import com.spring.jwt.mongodb.models.Room;
+import com.spring.jwt.mongodb.models.hotel.Room;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +32,8 @@ public interface HotelService {
     ResponseEntity<Object> addRoom(Room room,String id);
 
     ResponseEntity<Object> deleteRoom(String id, String roomId);
+
+    ResponseEntity<Object> updateRoom(Room room, String id, String roomId);
+
+    ResponseEntity<Object> patchRoom(Room room, String id, String roomId);
 }

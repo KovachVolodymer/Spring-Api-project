@@ -1,4 +1,4 @@
-package com.spring.jwt.mongodb.models;
+package com.spring.jwt.mongodb.models.hotel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

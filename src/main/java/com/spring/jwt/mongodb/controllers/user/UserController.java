@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers.user;
 
 
+import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.user.Card;
 import com.spring.jwt.mongodb.models.user.User;
 import com.spring.jwt.mongodb.services.UserDetailsImpl;
@@ -77,6 +78,12 @@ public class UserController{
     @DeleteMapping("/card/{id}")
     public ResponseEntity<Object> deleteCard(@PathVariable String id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.deleteCard(id, userDetails.getId());
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PostMapping("/orderRoom")
+    public ResponseEntity<Object> orderRoom(@RequestBody OrderRoom orderRoom, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.orderRoom(orderRoom, userDetails.getId());
     }
 
 

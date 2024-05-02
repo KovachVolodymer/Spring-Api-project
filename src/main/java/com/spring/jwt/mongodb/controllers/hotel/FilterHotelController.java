@@ -1,8 +1,5 @@
 package com.spring.jwt.mongodb.controllers.hotel;
 
-import com.spring.jwt.mongodb.models.Hotel;
-import com.spring.jwt.mongodb.payload.response.MessageResponse;
-import com.spring.jwt.mongodb.repository.HotelsRepository;
 import com.spring.jwt.mongodb.services.hotel.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

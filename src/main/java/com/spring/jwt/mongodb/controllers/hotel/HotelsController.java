@@ -1,21 +1,14 @@
 package com.spring.jwt.mongodb.controllers.hotel;
 
-import com.spring.jwt.mongodb.models.Hotel;
+import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.Reviews;
-import com.spring.jwt.mongodb.payload.response.MessageResponse;
-import com.spring.jwt.mongodb.repository.HotelsRepository;
-import com.spring.jwt.mongodb.repository.UserRepository;
 import com.spring.jwt.mongodb.services.hotel.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.ResponseEntity.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

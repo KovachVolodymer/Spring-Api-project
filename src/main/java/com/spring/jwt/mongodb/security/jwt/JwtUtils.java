@@ -49,8 +49,7 @@ public class JwtUtils {
         claims.put("phone", user.getPhone());
         claims.put("address", user.getAddress());
         claims.put("birthday", user.getBirthday());
-        claims.put("favoritesHotels", user.getFavoritesHotels());
-        claims.put("recentSearch", user.getRecentSearch());
+
 
         return Jwts.builder()
                 .setClaims(claims)
