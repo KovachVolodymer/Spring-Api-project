@@ -47,6 +47,8 @@ public class User {
 
     private String birthday;
 
+    private Boolean isAdmin = false;
+
     private Set<Card> cards = new HashSet<>();
 
     private Set<Hotel> favoritesHotels = new HashSet<>();

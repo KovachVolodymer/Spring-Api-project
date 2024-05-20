@@ -91,7 +91,7 @@ public class UserController{
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/addRole/{id}")
+    @PatchMapping("/role/{id}")
     public ResponseEntity<Object> addRole(@PathVariable String id, @RequestBody String role ) {
         return userService.addRole(id, role);
     }
