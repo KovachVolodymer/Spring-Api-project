@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
             response.put("favoritesFlights", userData.getFavoritesFlights());
             response.put("cards", userData.getCards());
             response.put("orderRooms", userData.getOrderRooms());
+            response.put("isAdmin", userData.getIsAdmin());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
