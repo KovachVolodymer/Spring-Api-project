@@ -27,7 +27,6 @@ public class UserController{
     public ResponseEntity<Object> getMe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getUser(userDetails.getId());
     }
-
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PatchMapping("/me")
     public ResponseEntity<Object> updateMe(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody User user) {
@@ -38,6 +37,11 @@ public class UserController{
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id) {
         return userService.getUser(id);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -85,6 +89,13 @@ public class UserController{
     public ResponseEntity<Object> orderRoom(@RequestBody OrderRoom orderRoom, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.orderRoom(orderRoom, userDetails.getId());
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/addRole/{id}")
+    public ResponseEntity<Object> addRole(@PathVariable String id, @RequestBody String role ) {
+        return userService.addRole(id, role);
+    }
+
 
 }
 

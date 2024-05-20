@@ -35,4 +35,7 @@ public interface UserService {
 
     ResponseEntity<Object> orderRoom(OrderRoom orderRoom, String id);
 
+    ResponseEntity<Object> getAllUsers();
+
+    ResponseEntity<Object> addRole(String id, String role);
 }

@@ -4,13 +4,12 @@ import com.spring.jwt.mongodb.models.Flight;
 import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.hotel.Room;
-import com.spring.jwt.mongodb.models.user.Card;
-import com.spring.jwt.mongodb.models.user.RecentSearch;
-import com.spring.jwt.mongodb.models.user.User;
+import com.spring.jwt.mongodb.models.user.*;
 import com.spring.jwt.mongodb.payload.cvc.CVVEncryptionService;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.repository.HotelsRepository;
+import com.spring.jwt.mongodb.repository.RoleRepository;
 import com.spring.jwt.mongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     CVVEncryptionService cvvEncryptionService;
+
+    @Autowired
+    RoleRepository roleRepository;
 
 
     @Override
@@ -280,6 +279,45 @@ public class UserServiceImpl implements UserService {
         hotelsRepository.save(hotel);
 
         return ResponseEntity.ok(new MessageResponse("Room ordered"));
+    }
+
+    @Override
+    public ResponseEntity<Object> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+    @Override
+    public ResponseEntity<Object> addRole(String id, String role) {
+
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Set<Role> roles = user.getRoles();
+            if(role.contains("admin"))
+            {
+                Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(adminRole);
+            }
+            else if(role.contains("mod"))
+            {
+                Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(modRole);
+            }
+            else
+            {
+                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(userRole);
+            }
+            user.setRoles(roles);
+            userRepository.save(user);
+            return ResponseEntity.ok(new MessageResponse("Role added successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
+        }
     }
 
 
