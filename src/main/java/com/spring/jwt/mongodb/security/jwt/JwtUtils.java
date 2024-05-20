@@ -49,6 +49,7 @@ public class JwtUtils {
         claims.put("phone", user.getPhone());
         claims.put("address", user.getAddress());
         claims.put("birthday", user.getBirthday());
+        claims.put("isAdmin", user.getIsAdmin());
 
 
         return Jwts.builder()
