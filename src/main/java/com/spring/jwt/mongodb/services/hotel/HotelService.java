@@ -36,4 +36,6 @@ public interface HotelService {
     ResponseEntity<Object> updateRoom(Room room, String id, String roomId);
 
     ResponseEntity<Object> patchRoom(Room room, String id, String roomId);
+
+    ResponseEntity<List<String>> getUniqueCities();
 }

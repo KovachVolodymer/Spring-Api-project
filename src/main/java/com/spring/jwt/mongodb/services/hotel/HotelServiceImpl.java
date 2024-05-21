@@ -118,6 +118,7 @@ public class HotelServiceImpl implements HotelService{
             Optional.ofNullable(hotel.getReviews()).ifPresent(h::setReviews);
             Optional.ofNullable(hotel.getDescription()).ifPresent(h::setDescription);
             Optional.ofNullable(hotel.getAlt()).ifPresent(h::setAlt);
+            Optional.ofNullable(hotel.getCity()).ifPresent(h::setCity);
             hotelsRepository.save(h);
         });
         return optionalHotel.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
@@ -236,5 +237,20 @@ public class HotelServiceImpl implements HotelService{
             hotelsRepository.save(hotel);
         });
         return ResponseEntity.ok().body(new MessageResponse("Room updated"));
+    }
+
+    @Override
+    public ResponseEntity<List<String>> getUniqueCities() {
+        List<Hotel> hotelsList = hotelsRepository.findAll();
+        List<String> citiesList = new ArrayList<>();
+        for (Hotel hotel : hotelsList) {
+            if (!citiesList.contains(hotel.getCity())) {
+                citiesList.add(hotel.getCity());
+            }
+        }
+        return ok(citiesList
+                .stream()
+                .sorted()
+                .collect(Collectors.toList()));
     }
 }

@@ -63,4 +63,10 @@ public class HotelsController {
     }
 
 
+    @GetMapping("/cities")
+    public ResponseEntity<List<String>> getUniqueCities() {
+        return hotelService.getUniqueCities();
+    }
+
+
 }

@@ -30,6 +30,8 @@ public class Hotel {
 
     private String photo;
 
+    private String city;
+
     private List<String> advantages;
 
     private List<Reviews> reviews;
