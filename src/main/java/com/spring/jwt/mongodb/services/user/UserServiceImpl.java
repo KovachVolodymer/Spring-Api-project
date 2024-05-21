@@ -348,6 +348,9 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+            if (user.getOrderRooms().isEmpty()){
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("No orders found"));
+            }
             return ResponseEntity.ok(user.getOrderRooms());
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
@@ -384,7 +387,10 @@ public class UserServiceImpl implements UserService {
         flight.setAmount(flight.getAmount() - 1);
         flightsRepository.save(flight);
 
-        return ResponseEntity.ok(new MessageResponse("Flight ordered you number seat "+seat));
+        Map<String, Object> response = new HashMap<>();
+        response.put("seat", seat);
+
+        return ResponseEntity.ok(response);
     }
 
     @Override

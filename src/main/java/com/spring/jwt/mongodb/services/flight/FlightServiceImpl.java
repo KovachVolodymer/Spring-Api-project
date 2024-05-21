@@ -224,7 +224,7 @@ public class FlightServiceImpl implements FlightService{
             case "Quickest":
                 return Comparator.comparing(Flight::getDuration);
             default:
-                return Comparator.comparing(Flight::getPrice); // Default to cheapest if sort is not recognized
+                return Comparator.comparing(Flight::getPrice); // Default to the cheapest if sort is not recognized
         }
     }
 
