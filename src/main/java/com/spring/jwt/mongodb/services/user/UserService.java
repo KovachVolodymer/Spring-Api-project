@@ -43,4 +43,6 @@ public interface UserService {
     ResponseEntity<Object> getOrders(String id);
 
     ResponseEntity<Object> orderFlight(OrderFlight orderFlight, String id);
+
+    ResponseEntity<Object> deleteUser(String id);
 }

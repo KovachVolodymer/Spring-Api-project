@@ -387,5 +387,17 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(new MessageResponse("Flight ordered you number seat "+seat));
     }
 
+    @Override
+    public ResponseEntity<Object> deleteUser(String id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            userRepository.delete(user);
+            return ResponseEntity.ok(new MessageResponse("User deleted successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
+        }
+    }
+
 
 }
