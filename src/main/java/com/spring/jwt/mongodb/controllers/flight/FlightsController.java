@@ -1,20 +1,15 @@
 package com.spring.jwt.mongodb.controllers.flight;
 
-import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.flight.Flight;
 import com.spring.jwt.mongodb.models.Reviews;
-import com.spring.jwt.mongodb.payload.response.MessageResponse;
-import com.spring.jwt.mongodb.repository.FlightsRepository;
 import com.spring.jwt.mongodb.services.flight.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

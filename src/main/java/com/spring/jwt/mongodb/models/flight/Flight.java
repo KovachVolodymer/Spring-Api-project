@@ -1,5 +1,6 @@
-package com.spring.jwt.mongodb.models;
+package com.spring.jwt.mongodb.models.flight;
 
+import com.spring.jwt.mongodb.models.Reviews;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -32,6 +33,7 @@ public class Flight {
     private String toArrive;
     private String slug;
 
+    private Integer amount;
 
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
@@ -42,5 +44,6 @@ public class Flight {
 
     private List<String> advantages;
     private List<Reviews> reviews;
+
 
 }

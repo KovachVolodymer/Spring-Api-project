@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.services.user;
 
-import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.flight.Flight;
+import com.spring.jwt.mongodb.models.flight.OrderFlight;
 import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.hotel.Room;
@@ -83,12 +84,32 @@ public class UserServiceImpl implements UserService {
             }
             Optional.ofNullable(user.getEmail()).ifPresent(u::setEmail);
 
+            Set<Role> roles = new HashSet<>();
+            roles.addAll(u.getRoles());
+            if(user.getIsAdmin())
+            {
+                Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(adminRole);
+                Optional.ofNullable(user.getIsAdmin()).ifPresent(u::setIsAdmin);
+            }
+            else
+            {
+                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(userRole);
+            }
+
+            u.setRoles(roles);
             userRepository.save(u);
             return ResponseEntity.ok(new MessageResponse("User updated successfully"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
         }
     }
+
+
+
 
     @Override
     public ResponseEntity<Object> favoriteFlight(Map<String, String> body) {
@@ -320,6 +341,50 @@ public class UserServiceImpl implements UserService {
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
         }
+    }
+
+    @Override
+    public ResponseEntity<Object> getOrders(String id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return ResponseEntity.ok(user.getOrderRooms());
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> orderFlight(OrderFlight orderFlight, String id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        User user = userOptional.get();
+
+        // Перевірка наявності рейсу
+        if (!flightsRepository.existsById(orderFlight.getFlightId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight not found"));
+        }
+
+        Flight flight = flightsRepository.findById(orderFlight.getFlightId()).get();
+
+        // Перевірка наявності картки
+        boolean cardExists = user.getCards().stream().anyMatch(card -> card.getId().equals(orderFlight.getCardId()));
+        if (!cardExists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Card not found"));
+        }
+
+        // Додавання замовлення рейсу до користувача і збереження змін
+        user.getOrderFlights().add(orderFlight);
+        userRepository.save(user);
+
+        if (flight.getAmount() == 0) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Flight not available"));
+        }
+        int seat=flight.getAmount();
+
+        flight.setAmount(flight.getAmount() - 1);
+        flightsRepository.save(flight);
+
+        return ResponseEntity.ok(new MessageResponse("Flight ordered you number seat "+seat));
     }
 
 

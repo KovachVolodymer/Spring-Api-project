@@ -1,6 +1,7 @@
 package com.spring.jwt.mongodb.controllers.user;
 
 
+import com.spring.jwt.mongodb.models.flight.OrderFlight;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.user.Card;
 import com.spring.jwt.mongodb.models.user.User;
@@ -94,6 +95,18 @@ public class UserController{
     @PatchMapping("/role/{id}")
     public ResponseEntity<Object> addRole(@PathVariable String id, @RequestBody String role ) {
         return userService.addRole(id, role);
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping("/orderRoom")
+    public ResponseEntity<Object> getOrders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getOrders(userDetails.getId());
+    }
+
+   @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PostMapping("/orderFlight")
+    public ResponseEntity<Object> orderFlight(@RequestBody OrderFlight orderFlight, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.orderFlight(orderFlight, userDetails.getId());
     }
 
 

@@ -2,7 +2,8 @@ package com.spring.jwt.mongodb.models.user;
 
 import java.util.*;
 
-import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.flight.Flight;
+import com.spring.jwt.mongodb.models.flight.OrderFlight;
 import com.spring.jwt.mongodb.models.hotel.Hotel;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import jakarta.validation.constraints.Email;
@@ -58,6 +59,8 @@ public class User {
     private List<RecentSearch> recentSearch = new ArrayList<>();
 
     private List<OrderRoom> orderRooms = new ArrayList<>();
+
+    private List<OrderFlight> orderFlights = new ArrayList<>();
 
 
     public User(String username, String email, String password, String phone) {

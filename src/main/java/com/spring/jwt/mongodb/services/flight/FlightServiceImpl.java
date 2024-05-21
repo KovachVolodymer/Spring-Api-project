@@ -1,6 +1,6 @@
 package com.spring.jwt.mongodb.services.flight;
 
-import com.spring.jwt.mongodb.models.Flight;
+import com.spring.jwt.mongodb.models.flight.Flight;
 import com.spring.jwt.mongodb.models.Reviews;
 import com.spring.jwt.mongodb.payload.response.MessageResponse;
 import com.spring.jwt.mongodb.repository.FlightsRepository;
@@ -90,6 +90,15 @@ public class FlightServiceImpl implements FlightService{
             saveFlight.setPartnerName(flight.getPartnerName());
             saveFlight.setFromArrive(flight.getFromArrive());
             saveFlight.setToArrive(flight.getToArrive());
+            saveFlight.setAirlineLogo(flight.getAirlineLogo());
+            saveFlight.setDepartureTime(flight.getDepartureTime());
+            saveFlight.setArrivalTime(flight.getArrivalTime());
+            saveFlight.setPartnerLogo(flight.getPartnerLogo());
+            saveFlight.setAdvantages(flight.getAdvantages());
+            saveFlight.setReviews(flight.getReviews());
+            saveFlight.setSlug(flight.getSlug());
+            saveFlight.setPlaneName(flight.getPlaneName());
+            saveFlight.setAmount(flight.getAmount());
             return new ResponseEntity<>(flightsRepository.save(saveFlight), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -116,6 +125,9 @@ public class FlightServiceImpl implements FlightService{
             Optional.ofNullable(flight.getArrivalTime()).ifPresent(flg::setArrivalTime);
             Optional.ofNullable(flight.getDepartureTime()).ifPresent(flg::setDepartureTime);
             Optional.ofNullable(flight.getPartnerLogo()).ifPresent(flg::setPartnerLogo);
+            Optional.ofNullable(flight.getPlaneName()).ifPresent(flg::setPlaneName);
+            Optional.ofNullable(flight.getSlug()).ifPresent(flg::setSlug);
+            Optional.ofNullable(flight.getAmount()).ifPresent(flg::setAmount);
 
             flightsRepository.save(flg);
 
@@ -167,14 +179,21 @@ public class FlightServiceImpl implements FlightService{
         }
     }
 
+
+
     @Override
-    public ResponseEntity<Object> filter(String maxPrice, String minPrice, String airLine, String rating, String sort, String departureTime) {
+    public ResponseEntity<Object> filter(String maxPrice, String minPrice,
+                                         String airLine, String rating, String sort,
+                                         String departureTime, String arrivalTime) {
         int minPriceInt = Integer.parseInt(minPrice);
         int maxPriceInt = Integer.parseInt(maxPrice);
         double ratingDouble = Double.parseDouble(rating);
 
 
-        List<Flight> flights = flightsRepository.filter(minPriceInt, maxPriceInt, airLine, ratingDouble, LocalDateTime.parse(departureTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        List<Flight> flights = flightsRepository.filter(minPriceInt,
+                maxPriceInt, airLine, ratingDouble,
+                LocalDateTime.parse(departureTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                LocalDateTime.parse(arrivalTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         switch (sort)
         {

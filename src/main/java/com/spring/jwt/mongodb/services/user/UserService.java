@@ -1,5 +1,6 @@
 package com.spring.jwt.mongodb.services.user;
 
+import com.spring.jwt.mongodb.models.flight.OrderFlight;
 import com.spring.jwt.mongodb.models.hotel.OrderRoom;
 import com.spring.jwt.mongodb.models.user.Card;
 import com.spring.jwt.mongodb.models.user.RecentSearch;
@@ -38,4 +39,8 @@ public interface UserService {
     ResponseEntity<Object> getAllUsers();
 
     ResponseEntity<Object> addRole(String id, String role);
+
+    ResponseEntity<Object> getOrders(String id);
+
+    ResponseEntity<Object> orderFlight(OrderFlight orderFlight, String id);
 }
