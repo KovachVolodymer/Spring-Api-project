@@ -28,4 +28,5 @@ public interface FlightService {
     ResponseEntity<Object> filter(String maxPrice, String minPrice, String airLine, String rating,
                                   String sort, String departureTime, String arrivalTime);
 
+    ResponseEntity<List<String>> getUniqueCities();
 }

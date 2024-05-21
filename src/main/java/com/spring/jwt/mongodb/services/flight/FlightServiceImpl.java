@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
@@ -185,39 +187,55 @@ public class FlightServiceImpl implements FlightService{
     public ResponseEntity<Object> filter(String maxPrice, String minPrice,
                                          String airLine, String rating, String sort,
                                          String departureTime, String arrivalTime) {
-        int minPriceInt = Integer.parseInt(minPrice);
-        int maxPriceInt = Integer.parseInt(maxPrice);
-        double ratingDouble = Double.parseDouble(rating);
+        try {
+            int minPriceInt = Integer.parseInt(minPrice);
+            int maxPriceInt = Integer.parseInt(maxPrice);
+            double ratingDouble = Double.parseDouble(rating);
 
+            LocalDateTime departureDateTime = departureTime != null && !departureTime.isEmpty()
+                    ? LocalDateTime.parse(departureTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    : null;
+            LocalDateTime arrivalDateTime = arrivalTime != null && !arrivalTime.isEmpty()
+                    ? LocalDateTime.parse(arrivalTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    : null;
 
-        List<Flight> flights = flightsRepository.filter(minPriceInt,
-                maxPriceInt, airLine, ratingDouble,
-                LocalDateTime.parse(departureTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-                LocalDateTime.parse(arrivalTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            List<Flight> flights = flightsRepository.filter(minPriceInt, maxPriceInt, airLine, ratingDouble, departureDateTime, arrivalDateTime);
 
-        switch (sort)
-        {
-            case "Cheapest":
-                flights.sort(Comparator.comparing(Flight::getPrice));
-                break;
-            case "Best":
-                flights.sort((f1, f2) -> {
-                    int result = f2.getRating().compareTo(f1.getRating());
-                    if (result == 0) {
-                        result = f1.getPrice().compareTo(f2.getPrice());
-                    }
-                    return result;
-                });
-                break;
-            case "Quickest":
-                flights.sort((f1, f2) -> f1.getDuration().compareTo(f2.getDuration()));
-                break;
-            default:
-                break;
+            Comparator<Flight> comparator = getComparator(sort);
+            flights.sort(comparator);
+
+            return flights.isEmpty()
+                    ? ResponseEntity.badRequest().body(new MessageResponse("No flights found"))
+                    : ResponseEntity.ok(flights);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid number format"));
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid date format"));
         }
+    }
 
-        return flights.isEmpty()
-                ? ResponseEntity.badRequest().body(new MessageResponse("No flights found"))
-                : ResponseEntity.ok(flights);
+    private Comparator<Flight> getComparator(String sort) {
+        switch (sort) {
+            case "Cheapest":
+                return Comparator.comparing(Flight::getPrice);
+            case "Best":
+                return Comparator.comparing(Flight::getRating).reversed()
+                        .thenComparing(Flight::getPrice);
+            case "Quickest":
+                return Comparator.comparing(Flight::getDuration);
+            default:
+                return Comparator.comparing(Flight::getPrice); // Default to cheapest if sort is not recognized
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<String>> getUniqueCities() {
+        List<String> cities = flightsRepository.findAll().stream()
+                .flatMap(flight -> Stream.of(flight.getFromArrive(), flight.getToArrive()))
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(cities);
     }
 }

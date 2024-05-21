@@ -63,4 +63,9 @@ public class FlightsController {
         return flightService.addReview(id, review);
     }
 
+    @GetMapping("/cities")
+    public ResponseEntity<List<String>> getUniqueCities() {
+        return flightService.getUniqueCities();
+    }
+
 }
