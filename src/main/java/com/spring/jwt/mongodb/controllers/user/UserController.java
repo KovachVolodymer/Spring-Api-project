@@ -104,7 +104,7 @@ public class UserController{
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @GetMapping("/orderRoom")
+    @GetMapping("/orders")
     public ResponseEntity<Object> getOrders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getOrders(userDetails.getId());
     }

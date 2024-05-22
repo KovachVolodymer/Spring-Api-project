@@ -346,19 +346,41 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            List<OrderRoom> orderRooms = user.getOrderRooms();
-            List<OrderFlight> orderFlights = user.getOrderFlights();
-            Set<Flight> flights = new HashSet<>();
-
-            for (OrderFlight orderFlight : orderFlights) {
-                Optional<Flight> flight = flightsRepository.findById(orderFlight.getFlightId());
-                flight.ifPresent(flights::add);
+            //I need id  photo and name price of hotel
+            //I need id partnerLogo and name from to price of flight
+            List<Map<String, Object>> hotelOrders = new ArrayList<>();
+            for (OrderRoom order : user.getOrderRooms()) {
+                Optional<Hotel> hotelOptional = hotelsRepository.findById(order.getHotelId());
+                if (hotelOptional.isPresent()) {
+                    Hotel hotel = hotelOptional.get();
+                    Map<String, Object> hotelOrder = new HashMap<>();
+                    hotelOrder.put("id", hotel.getId());
+                    hotelOrder.put("photo", hotel.getPhoto());
+                    hotelOrder.put("name", hotel.getName());
+                    hotelOrder.put("price", hotel.getPrice());
+                    hotelOrders.add(hotelOrder);
+                }
             }
 
+            List<Map<String, Object>> flightOrders = new ArrayList<>();
+            for (OrderFlight order : user.getOrderFlights()) {
+                Optional<Flight> flightOptional = flightsRepository.findById(order.getFlightId());
+                if (flightOptional.isPresent()) {
+                    Flight flight = flightOptional.get();
+                    Map<String, Object> flightOrder = new HashMap<>();
+                    flightOrder.put("id", flight.getId());
+                    flightOrder.put("partnerLogo", flight.getPartnerLogo());
+                    flightOrder.put("name", flight.getAirlineName());
+                    flightOrder.put("from", flight.getFromArrive());
+                    flightOrder.put("to", flight.getToArrive());
+                    flightOrder.put("price", flight.getPrice());
+                    flightOrders.add(flightOrder);
+                }
+            }
 
             Map<String, Object> response = new HashMap<>();
-            response.put("orderRooms", orderRooms);
-            response.put("orderFlights", flights);
+            response.put("hotelOrders", hotelOrders);
+            response.put("flightOrders", flightOrders);
 
 
             return ResponseEntity.ok(response);
