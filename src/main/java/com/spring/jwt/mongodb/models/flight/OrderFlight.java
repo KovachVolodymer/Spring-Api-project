@@ -13,6 +13,7 @@ public class OrderFlight {
 
     @Id
     private String id;
+
     private String flightId;
     private String cardId;
 
