@@ -3,11 +3,13 @@ package com.spring.jwt.mongodb.models.hotel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Setter
 @Getter
 public class OrderRoom {
 

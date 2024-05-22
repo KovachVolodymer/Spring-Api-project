@@ -15,10 +15,10 @@ public class RecentSearchController {
     @Autowired
     UserService userService;
 
-        @PostMapping("/recentSearch")
-        public ResponseEntity<Object> recentSearch(@RequestBody RecentSearch recentSearch) {
-            return userService.recentSearch(recentSearch);
-        }
+    @PostMapping("/recentSearch")
+    public ResponseEntity<Object> recentSearch(@RequestBody RecentSearch recentSearch) {
+        return userService.recentSearch(recentSearch);
+    }
 
     @GetMapping("{id}/recentSearch")
     public ResponseEntity<List<RecentSearch>> getRecentSearch(@PathVariable String id) {

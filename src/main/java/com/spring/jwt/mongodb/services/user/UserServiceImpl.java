@@ -55,12 +55,9 @@ public class UserServiceImpl implements UserService {
             response.put("phone", userData.getPhone());
             response.put("address", userData.getAddress());
             response.put("dataBirth", userData.getBirthday());
-            response.put("recentSearch", userData.getRecentSearch());
             response.put("favoritesHotels", userData.getFavoritesHotels());
             response.put("favoritesFlights", userData.getFavoritesFlights());
             response.put("cards", userData.getCards());
-            response.put("orderRooms", userData.getOrderRooms());
-            response.put("orderFlights", userData.getOrderFlights());
             response.put("isAdmin", userData.getIsAdmin());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -349,10 +346,22 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getOrderRooms().isEmpty()){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("No orders found"));
+            List<OrderRoom> orderRooms = user.getOrderRooms();
+            List<OrderFlight> orderFlights = user.getOrderFlights();
+            Set<Flight> flights = new HashSet<>();
+
+            for (OrderFlight orderFlight : orderFlights) {
+                Optional<Flight> flight = flightsRepository.findById(orderFlight.getFlightId());
+                flight.ifPresent(flights::add);
             }
-            return ResponseEntity.ok(user.getOrderRooms());
+
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("orderRooms", orderRooms);
+            response.put("orderFlights", flights);
+
+
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
         }
@@ -390,9 +399,10 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> response = new HashMap<>();
         response.put("seat", seat+"A");
-
         return ResponseEntity.ok(response);
     }
+
+
 
     @Override
     public ResponseEntity<Object> deleteUser(String id) {

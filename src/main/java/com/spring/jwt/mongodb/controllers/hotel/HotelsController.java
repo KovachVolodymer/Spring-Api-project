@@ -62,7 +62,6 @@ public class HotelsController {
         return hotelService.addReview(id, review);
     }
 
-
     @GetMapping("/cities")
     public ResponseEntity<List<String>> getUniqueCities() {
         return hotelService.getUniqueCities();
