@@ -244,7 +244,7 @@ public class HotelServiceImpl implements HotelService{
         List<Hotel> hotelsList = hotelsRepository.findAll();
         List<String> citiesList = new ArrayList<>();
         for (Hotel hotel : hotelsList) {
-            if (!citiesList.contains(hotel.getCity())) {
+            if (!citiesList.contains(hotel.getCity())){
                 citiesList.add(hotel.getCity());
             }
         }
