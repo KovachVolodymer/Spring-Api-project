@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
             response.put("favoritesFlights", userData.getFavoritesFlights());
             response.put("cards", userData.getCards());
             response.put("orderRooms", userData.getOrderRooms());
+            response.put("orderFlights", userData.getOrderFlights());
             response.put("isAdmin", userData.getIsAdmin());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
