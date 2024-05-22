@@ -130,7 +130,9 @@ public class FlightServiceImpl implements FlightService{
             Optional.ofNullable(flight.getPlaneName()).ifPresent(flg::setPlaneName);
             Optional.ofNullable(flight.getSlug()).ifPresent(flg::setSlug);
             Optional.ofNullable(flight.getAmount()).ifPresent(flg::setAmount);
-
+            Optional.ofNullable(flight.getReviews()).ifPresent(flg::setReviews);
+            Optional.ofNullable(flight.getAmount()).ifPresent(flg::setAmount);
+            
             flightsRepository.save(flg);
 
         });

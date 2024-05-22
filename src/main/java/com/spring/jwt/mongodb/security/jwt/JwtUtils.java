@@ -46,7 +46,7 @@ public class JwtUtils {
         claims.put("username", user.getUsername());
         claims.put("email", user.getEmail());
         claims.put("isAdmin", user.getIsAdmin());
-        claims.put("carts", user.getCards());
+        claims.put("cards", user.getCards());
 
 
         return Jwts.builder()

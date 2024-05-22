@@ -388,7 +388,7 @@ public class UserServiceImpl implements UserService {
         flightsRepository.save(flight);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("seat", seat);
+        response.put("seat", seat+"A");
 
         return ResponseEntity.ok(response);
     }
