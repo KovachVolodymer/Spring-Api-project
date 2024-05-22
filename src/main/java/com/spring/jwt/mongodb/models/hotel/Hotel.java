@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Data
 @AllArgsConstructor
-@Document(collection = "hotels")
+@Document(collection = "hotel")
 public class Hotel {
 
     @Id

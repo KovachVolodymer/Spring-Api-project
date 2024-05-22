@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@Document(collection = "flights")
+@Document(collection = "flight")
 public class Flight {
 
     @Id
