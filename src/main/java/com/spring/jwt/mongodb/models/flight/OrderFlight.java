@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 public class OrderFlight {
 
-    private static final AtomicLong idCounter = new AtomicLong();
+    private static final AtomicLong idCounterFlight = new AtomicLong();
 
     @Id
     private String id;
@@ -17,6 +17,6 @@ public class OrderFlight {
     private String cardId;
 
     public OrderFlight() {
-        this.id = String.valueOf(idCounter.incrementAndGet());
+        this.id = String.valueOf(idCounterFlight.incrementAndGet());
     }
 }
