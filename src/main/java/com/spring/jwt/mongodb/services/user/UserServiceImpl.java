@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
             u.setRoles(roles);
             userRepository.save(u);
-            return ResponseEntity.ok(new MessageResponse("User updated successfully"));
+            return ResponseEntity.ok(u);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("User not found"));
         }
